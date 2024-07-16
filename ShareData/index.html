@@ -1,0 +1,41 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Shared Memory between WASM Modules</title>
+</head>
+<body>
+    <h1>Shared Memory between WASM Modules</h1>
+    <script>
+        const loadWasmModule = (url) => {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = url;
+                script.onload = () => {
+                    Module.onRuntimeInitialized = () => {
+                        resolve(Module);
+                    };
+                };
+                script.onerror = reject;
+                document.body.appendChild(script);
+            });
+        };
+
+        Promise.all([
+            loadWasmModule('module1.js'),
+            loadWasmModule('module2.js')
+        ]).then(([Module1, Module2]) => {
+            const sharedMemory = new Int32Array(Module1.HEAP32.buffer, 0, 1);
+
+            const printFromModule1 = Module1.cwrap('print_from_module1', null, ['number']);
+            const setValueInSharedMemory = Module2.cwrap('set_value_in_shared_memory', null, ['number']);
+
+            setValueInSharedMemory(sharedMemory.byteOffset);
+            printFromModule1(sharedMemory.byteOffset);
+        }).catch((err) => {
+            console.error('Error loading modules:', err);
+        });
+    </script>
+</body>
+</html>
