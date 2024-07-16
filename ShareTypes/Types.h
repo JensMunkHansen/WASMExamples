@@ -1,8 +1,18 @@
-#pragma once
+#ifndef types_h
+#define types_h
 
+#include "Config.h"
+
+#ifdef __cplusplus
 extern "C" {
-  typedef struct MyData {
+#endif
+  typedef struct {
     float f;
     int i;
-  } MyDataT;
+  } MyData;
+  MyData* CreateStruct();
+#ifdef __cplusplus
 }
+#endif
+
+#endif
