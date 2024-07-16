@@ -1,0 +1,12 @@
+# Ignore all
+*
+
+# Unignore all files with extensions recursively
+!**/*.*
+
+# Unignore Makefiles recursively
+!**/Makefile
+
+example.js
+example.html
+*.wasm
