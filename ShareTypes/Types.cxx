@@ -7,3 +7,4 @@ MyData* CreateStruct() {
   p->i = 101;
   return p;
 }
+

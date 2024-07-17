@@ -12,3 +12,4 @@ MyData Produce() {
 void Consume(MyData* data) {
   printf("f: %f, i: %d\n", data->f, data->i);
 }
+

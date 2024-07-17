@@ -14,7 +14,7 @@ async function main() {
         // Create an instance of the module object
 	const instance1 = wasmModule1._CreateStruct();
 	wasmModule1._Consume(instance1);
-	// Do not share memory, but at least the types are known
+	// Doesn't share memory, but at least the types are known
 	wasmModule2._Consume(instance1);
     } catch (error) {
 	nErrors = 1;
