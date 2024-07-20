@@ -20,24 +20,24 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 console.log('Initializing Module1...');
 
-Module1({ wasmMemory: sharedMemory }).then(instance1 => {
+Module2({ wasmMemory: sharedMemory }).then(instance1 => {
     console.log('Module1 initialized');
     delay(100).then(() => {
         console.log('Initializing Module2...');
 	
-	Module2({ wasmMemory: sharedMemory }).then(instance2 => {
+	Module1({ wasmMemory: sharedMemory }).then(instance2 => {
             console.log('Module2 initialized');
 
 	    // Function to run the operations with synchronization
             async function runOperations() {
-	        const largeOffset = 1024*1024 / 4;
+	        const largeOffset = 0;//1024*1024 / 4;
                 // Set shared memory to 42 using Module1
                 console.log('Setting memory with Module1...');
                 instance1._set_shared_memory(sharedMemoryBuffer.byteOffset + largeOffset, 41);
                 console.log('Set shared memory to 42 at large offset');
                 await delay(100); // Small delay for synchronization
                 instance1._get_shared_memory(sharedMemoryBuffer.byteOffset + largeOffset);
-                await delay(100); // Small delay for synchronization
+                await delay(1000); // Small delay for synchronization
 	    
                 // Read shared memory using Module2
                 console.log('Reading memory with Module2...');

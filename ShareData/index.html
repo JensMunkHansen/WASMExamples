@@ -9,7 +9,7 @@
     <h1>Shared Memory between WASM Modules</h1>
     <script>
         const loadWasmModule = (url) => {
-            return new Promise((resolve, reject) => {
+            const promise = new Promise((resolve, reject) => {
                 const script = document.createElement('script');
                 script.src = url;
                 script.onload = () => {
@@ -20,6 +20,7 @@
                 script.onerror = reject;
                 document.body.appendChild(script);
             });
+	    return promise;
         };
 
         Promise.all([

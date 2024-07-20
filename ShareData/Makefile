@@ -1,3 +1,3 @@
 all:
-	emcc module1.cpp -s EXPORTED_FUNCTIONS='["_print_from_module1"]' -s EXPORTED_RUNTIME_METHODS='["print", "printErr", "cwrap", "ccall"]' -o module1.js
-	emcc module2.cpp -s EXPORTED_FUNCTIONS='["_set_value_in_shared_memory"]' -s EXPORTED_RUNTIME_METHODS='["print", "printErr", "cwrap", "ccall"]' -o module2.js
+	emcc module1.cpp -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_FUNCTIONS='["_print_from_module1"]' -s EXPORTED_RUNTIME_METHODS='["print", "printErr", "cwrap", "ccall"]' -s ASSERTIONS=1 -s EXPORT_NAME='loadModule1' -s ENVIRONMENT='node,worker' -s ALLOW_TABLE_GROWTH=1 -s ALLOW_MEMORY_GROWTH=1 -o module1.mjs
+	emcc module2.cpp -s MODULARIZE=1 -s EXPORT_ES6=1 -s EXPORTED_FUNCTIONS='["_set_value_in_shared_memory"]' -s EXPORTED_RUNTIME_METHODS='["print", "printErr", "cwrap", "ccall"]' -s ASSERTIONS=1 -s EXPORT_NAME='loadModule2' -s ENVIRONMENT='node,worker' -s ALLOW_TABLE_GROWTH=1 -s ALLOW_MEMORY_GROWTH=1 -o module2.mjs

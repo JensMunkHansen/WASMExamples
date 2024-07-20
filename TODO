@@ -1,6 +1,16 @@
-- Changes to VTK + additions: Comparing it with GUI Support for Qt (only interaction part). Between 1000 and 1500 lines of code.
 - Knowledge of all browser events and their counterparts in VTK.
-- Events are not just received by interactors, but also their styles and widgets.
+
+- Events are not just received by interactors, but also their styles
+  and widgets. Right now, VTK only support one interactor and we
+  cannot simple unregister this interactor, since it is also
+  referenced by other objects.
+
+- The best way would be to implement a new interactor that allows multiple
+  instances and behind the scenes take care of distribution of
+  events. It requires changes to VTK and building GUISupport for
+  JavaScript. Comparing it with GUI Support for Qt (only interaction
+  part). Between 1000 and 1500 lines of code (excluding all test code).
+
 - Events cannot be thought of as individual events and a
   translator. You may press the mouse and move from one window to
   another.
@@ -10,17 +20,26 @@
 You need to build up the necessary knowledge of event handling using
 emscripten before you start changing VTK.
 
-- JavaScript inside C++ (complaint to optimization)
+- Get familiar with interactors and JavaScript by trying to share an
+  interactor between multiple windows and windows. This can be done in
+  Python or event better in JavaScript if the necessary object are
+  wrapped. We have just started doing this.
 
-- Small sample application to be familar with browser events using emscripten.
+- JavaScript inside C++ (must be compatible with optimization)
 
-- Windows on top of one-another. How can this be handled.
+- Small sample application to be familar with browser events using
+  emscripten. Get familiar with their asynchronous nature.
 
-- Indentify all browser events and figure out how they are access using emscripten and is this always in-sync with what you can do in JavaScript?
+- Windows on top of one-another. How can this be handled or detected
+  from C++ using Emscripten?
+
+- Indentify all browser events and figure out how they are accessed
+  using emscripten and is this always in-sync with what you can do in
+  JavaScript?
 
 - Make a Qt multi-window example and study the design for distributing
   events to vtkObjects. Can we use part of this design or at least the
-  logic? We cannot replicate the design fully since it is blocking and
+  logic? We cannot replicate the design fully, since it is blocking and
   we cannot do that in a web application.
 
 - Investigate possible designs and their performance by branching of VTK.

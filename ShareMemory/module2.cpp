@@ -15,6 +15,7 @@ extern "C" {
     void get_shared_memory(int* shared_mem) {
         std::atomic<int>* atomic_shared_mem = reinterpret_cast<std::atomic<int>*>(shared_mem);
         int value = atomic_shared_mem->load(std::memory_order_relaxed);
+	//	std::cout << "PIK" << std::endl;
         std::cout << "Module 2 read shared memory: " << value << std::endl;
     }
 }
