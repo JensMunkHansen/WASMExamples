@@ -1,0 +1,28 @@
+- Changes to VTK + additions: Comparing it with GUI Support for Qt (only interaction part). Between 1000 and 1500 lines of code.
+- Knowledge of all browser events and their counterparts in VTK.
+- Events are not just received by interactors, but also their styles and widgets.
+- Events cannot be thought of as individual events and a
+  translator. You may press the mouse and move from one window to
+  another.
+
+- It is 3-4 man months of work spread over a year or so.
+
+You need to build up the necessary knowledge of event handling using
+emscripten before you start changing VTK.
+
+- JavaScript inside C++ (complaint to optimization)
+
+- Small sample application to be familar with browser events using emscripten.
+
+- Windows on top of one-another. How can this be handled.
+
+- Indentify all browser events and figure out how they are access using emscripten and is this always in-sync with what you can do in JavaScript?
+
+- Make a Qt multi-window example and study the design for distributing
+  events to vtkObjects. Can we use part of this design or at least the
+  logic? We cannot replicate the design fully since it is blocking and
+  we cannot do that in a web application.
+
+- Investigate possible designs and their performance by branching of VTK.
+
+
