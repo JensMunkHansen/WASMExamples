@@ -8,3 +8,10 @@ public:
 
   virtual void greet();
 };
+
+class OtherClass
+{
+public:
+  OtherClass();
+  float f;
+};
