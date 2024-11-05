@@ -3,20 +3,19 @@
 
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-int thread1_started = 0;
-int thread2_started = 0;
+int threads_started = 0;
 
 void* worker1(void* arg)
 {
   int* val = (int*)arg;
 
-  // Signal that thread 1 has started
+  // Signal that worker 1 has started
   pthread_mutex_lock(&mutex);
-  thread1_started = 1;
+  threads_started++;
   pthread_cond_signal(&cond);
   pthread_mutex_unlock(&mutex);
 
-  // Do some work with synchronized access to shared variable
+  // Do some work
   pthread_mutex_lock(&mutex);
   *val += 1;
   printf("Worker 1: incremented value to %d\n", *val);
@@ -29,13 +28,13 @@ void* worker2(void* arg)
 {
   int* val = (int*)arg;
 
-  // Signal that thread 2 has started
+  // Signal that worker 2 has started
   pthread_mutex_lock(&mutex);
-  thread2_started = 1;
+  threads_started++;
   pthread_cond_signal(&cond);
   pthread_mutex_unlock(&mutex);
 
-  // Do some work with synchronized access to shared variable
+  // Do some work
   pthread_mutex_lock(&mutex);
   *val += 2;
   printf("Worker 2: incremented value to %d\n", *val);
@@ -65,7 +64,7 @@ int main()
 
   // Wait until both threads have started
   pthread_mutex_lock(&mutex);
-  while (!thread1_started || !thread2_started)
+  while (threads_started < 2)
   {
     pthread_cond_wait(&cond, &mutex);
   }
