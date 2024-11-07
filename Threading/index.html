@@ -2,17 +2,8 @@
 <html>
 <body>
   <script type="module">
-    import loadCatch2TestModule from './library.js';
-    const options = {
-        print: function () {
-            const text = Array.prototype.slice.call(arguments).join(' ');
-            console.info(text);
-        },
-        printErr: function () {
-            const text = Array.prototype.slice.call(arguments).join(' ');
-            console.error(text);
-        }
-    };
+    import loadCatch2TestModule from './wasmlibrary.js';
+    const options = { print: console.info, printErr: console.error };
     let wasmModule = await loadCatch2TestModule(options);
     console.log("WASM module loaded");
     let retval = wasmModule._DoWork();

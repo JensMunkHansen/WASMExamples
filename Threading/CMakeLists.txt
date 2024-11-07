@@ -10,21 +10,28 @@ endif()
 
 set(TARGET_NAME main)
 set(LIBRARY_NAME library)
+set(LIBRARY_PROXY_NAME wasmlibrary)
 
 find_package(Threads REQUIRED)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
+if (BUILD_TESTING)
+  find_package(Catch2 3.5.2 EXACT REQUIRED)
+  include(CTest)
+  include(Catch)
+endif()
 
 include(GenerateExportHeader)
 
 # Configuration file for enabling/disabling threading
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 
-if (EMSCRIPTEN)
-  set(emscripten_optimization_flags -g2 -O0)
-  add_executable(${LIBRARY_NAME})
-else()
-  add_library(${LIBRARY_NAME} STATIC "")
-  generate_export_header(${LIBRARY_NAME})
-endif()
+add_library(${LIBRARY_NAME} STATIC "")
+
+generate_export_header(${LIBRARY_NAME})
 
 target_sources(${LIBRARY_NAME}
   PUBLIC
@@ -46,6 +53,10 @@ if (THREADING_ENABLED)
 endif()
 
 if (EMSCRIPTEN)
+  set(emscripten_optimization_flags -g2 -O0)
+  add_executable(${LIBRARY_PROXY_NAME} dummy.cxx)
+  target_link_libraries(${LIBRARY_PROXY_NAME} PRIVATE ${LIBRARY_NAME})
+  
   # -----------------------------------------------------------------------------
   # WebAssembly build options
   # -----------------------------------------------------------------------------
@@ -58,7 +69,8 @@ if (EMSCRIPTEN)
       "-sINCLUDE_FULL_LIBRARY"
       "-sASSERTIONS=1"
       "-sALLOW_TABLE_GROWTH=1"
-      "-sALLOW_MEMORY_GROWTH=1"  
+      "-sALLOW_MEMORY_GROWTH=1"
+      "-sMAXIMUM_MEMORY=2GB"
       "-sERROR_ON_UNDEFINED_SYMBOLS=1"
       "-sEXPORT_NAME=loadCatch2TestModule"
       "-sNO_EXIT_RUNTIME=0"      
@@ -67,6 +79,7 @@ if (EMSCRIPTEN)
     list(APPEND emscripten_link_options
       "-sENVIRONMENT=web,worker"
       "-sUSE_PTHREADS=1"
+      "-sSHARED_MEMORY=1"
       "-sPTHREAD_POOL_SIZE=4"
     )  
   else()
@@ -77,26 +90,59 @@ if (EMSCRIPTEN)
   list(APPEND emscripten_link_options
     "${emscripten_optimization_flags}")
 
-  target_link_options(${LIBRARY_NAME} PRIVATE
+  target_link_options(${LIBRARY_PROXY_NAME} PRIVATE
     ${emscripten_link_options})
   
   set(script_files
     index.html
+    package.json
+    package-lock.json
   )
   
   foreach(script_file ${script_files})
-    set(copyTarget ${LIBRARY_NAME}_copy_${script_file})
+    set(copyTarget ${LIBRARY_PROXY_NAME}_copy_${script_file})
     add_custom_target(
       ${copyTarget}
       COMMAND
         ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/${script_file}"
         "${CMAKE_CURRENT_BINARY_DIR}")
-    add_dependencies(${LIBRARY_NAME} ${copyTarget})
+    add_dependencies(${LIBRARY_PROXY_NAME} ${copyTarget})
   endforeach()  
 else()
   add_executable(${TARGET_NAME} main.cxx)
-  message("${LIBRARY_NAME}")
   target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARY_NAME}) 
 endif()
 
+if (BUILD_TESTING)
+  add_executable(main test.cxx)
+  target_link_libraries(main PRIVATE library)
+  target_link_libraries(main PRIVATE Catch2::Catch2WithMain)
+  if (EMSCRIPTEN)
+    set(emscripten_link_options)
+    list(APPEND emscripten_link_options
+      "-sASSERTIONS=1"
+      "-sERROR_ON_UNDEFINED_SYMBOLS=1"
+      "-sNO_EXIT_RUNTIME=0"      
+    )
+    if (THREADING_ENABLED)
+      list(APPEND emscripten_link_options
+        "-sUSE_PTHREADS=1"
+        "-sSHARED_MEMORY=1"
+        "-sPTHREAD_POOL_SIZE_STRICT=4"
+        "-sENVIRONMENT=node,worker"
+      )  
+    else()
+      list(APPEND emscripten_link_options
+        "-sENVIRONMENT=node"
+      )  
+    endif()
+    target_link_options(main PRIVATE
+      ${emscripten_link_options})
+    set_target_properties(main PROPERTIES SUFFIX ".cjs")
+  endif()
+endif()
+# npx node main.cjs
+catch_discover_tests(main)
+
+# node sampleTest.js
