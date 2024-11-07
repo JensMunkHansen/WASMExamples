@@ -87,7 +87,7 @@ if (EMSCRIPTEN)
   else()
     # Web, no threading
     list(APPEND emscripten_link_options
-      "-sENVIRONMENT=web"
+      "-sENVIRONMENT=web,node"
     )  
   endif()
   list(APPEND emscripten_link_options
