@@ -54,6 +54,7 @@ endif()
 
 if (EMSCRIPTEN)
   set(emscripten_optimization_flags -g2 -O0)
+  # It requires a .cxx file
   add_executable(${LIBRARY_PROXY_NAME} dummy.cxx)
   target_link_libraries(${LIBRARY_PROXY_NAME} PRIVATE ${LIBRARY_NAME})
   
@@ -62,20 +63,21 @@ if (EMSCRIPTEN)
   # -----------------------------------------------------------------------------
   set(emscripten_link_options)
   list(APPEND emscripten_link_options
-      "-sMODULARIZE=1"
-      "-sEXPORT_ES6=1"
-      "-sEXPORTED_FUNCTIONS=['_free', '_malloc', '_DoWork']"
-      "-sEXPORTED_RUNTIME_METHODS=['ENV', 'FS', 'ccall', 'stringToNewUTF8', 'addFunction']"
-      "-sINCLUDE_FULL_LIBRARY"
+      "-sMODULARIZE=1" # Module
+      "-sEXPORT_ES6=1" # ES6
+      "-sEXPORTED_FUNCTIONS=['_free', '_malloc', '_DoWork']" # Memory and DoWork
+      "-sEXPORTED_RUNTIME_METHODS=['ENV', 'FS', 'ccall', 'stringToNewUTF8', 'addFunction']" # Standards including callbacks
+      "-sINCLUDE_FULL_LIBRARY" # Prevent deletion of stuff
       "-sASSERTIONS=1"
-      "-sALLOW_TABLE_GROWTH=1"
+      "-sALLOW_TABLE_GROWTH=1" # Function pointers
       "-sALLOW_MEMORY_GROWTH=1"
       "-sMAXIMUM_MEMORY=2GB"
-      "-sERROR_ON_UNDEFINED_SYMBOLS=1"
-      "-sEXPORT_NAME=loadCatch2TestModule"
-      "-sNO_EXIT_RUNTIME=0"      
+      "-sERROR_ON_UNDEFINED_SYMBOLS=1" # Error tracking
+      "-sEXPORT_NAME=loadCatch2TestModule" # Module entry
+      "-sNO_EXIT_RUNTIME=0" # stdout always propagated      
   )
   if (THREADING_ENABLED)
+    # Web with threading
     list(APPEND emscripten_link_options
       "-sENVIRONMENT=web,worker"
       "-sUSE_PTHREADS=1"
@@ -83,6 +85,7 @@ if (EMSCRIPTEN)
       "-sPTHREAD_POOL_SIZE=4"
     )  
   else()
+    # Web, no threading
     list(APPEND emscripten_link_options
       "-sENVIRONMENT=web"
     )  
@@ -108,22 +111,32 @@ if (EMSCRIPTEN)
         "${CMAKE_CURRENT_SOURCE_DIR}/${script_file}"
         "${CMAKE_CURRENT_BINARY_DIR}")
     add_dependencies(${LIBRARY_PROXY_NAME} ${copyTarget})
-  endforeach()  
+  endforeach()
+  # We need this if we also make a test using a .js file
+  add_custom_command(
+    TARGET ${LIBRARY_PROXY_NAME}
+    POST_BUILD
+    COMMAND
+      npm install
+    WORKING_DIRECTORY
+      ${CMAKE_CURRENT_BINARY_DIR})
 else()
   add_executable(${TARGET_NAME} main.cxx)
   target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARY_NAME}) 
 endif()
 
 if (BUILD_TESTING)
-  add_executable(main test.cxx)
-  target_link_libraries(main PRIVATE library)
-  target_link_libraries(main PRIVATE Catch2::Catch2WithMain)
+  add_executable(sampleTest test.cxx)
+  target_link_libraries(sampleTest PRIVATE library)
+  target_link_libraries(sampleTest PRIVATE Catch2::Catch2WithMain)
   if (EMSCRIPTEN)
+    # Standard Catch2 test as a .cjs file
     set(emscripten_link_options)
+    # The testing is not an ES6 module
     list(APPEND emscripten_link_options
       "-sASSERTIONS=1"
       "-sERROR_ON_UNDEFINED_SYMBOLS=1"
-      "-sNO_EXIT_RUNTIME=0"      
+      "-sNO_EXIT_RUNTIME=0"
     )
     if (THREADING_ENABLED)
       list(APPEND emscripten_link_options
@@ -137,12 +150,11 @@ if (BUILD_TESTING)
         "-sENVIRONMENT=node"
       )  
     endif()
-    target_link_options(main PRIVATE
+    target_link_options(sampleTest PRIVATE
       ${emscripten_link_options})
-    set_target_properties(main PROPERTIES SUFFIX ".cjs")
+    set_target_properties(sampleTest PROPERTIES SUFFIX ".cjs")
   endif()
 endif()
-# npx node main.cjs
-catch_discover_tests(main)
+# npx node sampleTest.cjs
+catch_discover_tests(sampleTest)
 
-# node sampleTest.js
