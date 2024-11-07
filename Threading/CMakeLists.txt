@@ -154,7 +154,7 @@ if (BUILD_TESTING)
       ${emscripten_link_options})
     set_target_properties(sampleTest PROPERTIES SUFFIX ".cjs")
   endif()
+  catch_discover_tests(sampleTest)
 endif()
 # npx node sampleTest.cjs
-catch_discover_tests(sampleTest)
 

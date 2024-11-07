@@ -8,7 +8,7 @@ fi
 platform=$(echo "$1" | tr '[:upper:]' '[:lower:]')
 
 if [ "$platform" = "linux" ]; then
-    cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DTHREADING_ENABLED=ON
+    cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DTHREADING_ENABLED=ON -DCMAKE_FIND_ROOT_PATH=/home/jmh/github/Catch2CMake/install
     bear -- bash -c "cmake --build build -j 16"
 elif [ "$platform" = "wasm" ]; then
     source "$HOME/github/emsdk/emsdk_env.sh"
