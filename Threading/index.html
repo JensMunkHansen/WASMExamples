@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<body>
+  <script type="module">
+    import loadCatch2TestModule from './library.js';
+    const options = {
+        print: function () {
+            const text = Array.prototype.slice.call(arguments).join(' ');
+            console.info(text);
+        },
+        printErr: function () {
+            const text = Array.prototype.slice.call(arguments).join(' ');
+            console.error(text);
+        }
+    };
+    let wasmModule = await loadCatch2TestModule(options);
+    console.log("WASM module loaded");
+    let retval = wasmModule._DoWork();
+    console.log("After work");
+    console.log("return value is: " + retval);
+  </script>
+</body>
+
+</html>
