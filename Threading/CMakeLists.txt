@@ -79,7 +79,7 @@ if (EMSCRIPTEN)
   if (THREADING_ENABLED)
     # Web with threading
     list(APPEND emscripten_link_options
-      "-sENVIRONMENT=web,worker"
+      "-sENVIRONMENT=web,node,worker"
       "-sUSE_PTHREADS=1"
       "-sSHARED_MEMORY=1"
       "-sPTHREAD_POOL_SIZE=4"
@@ -98,6 +98,7 @@ if (EMSCRIPTEN)
   
   set(script_files
     index.html
+    run_Catch2Test.js
     package.json
     package-lock.json
   )
@@ -154,6 +155,13 @@ if (BUILD_TESTING)
       ${emscripten_link_options})
     set_target_properties(sampleTest PROPERTIES SUFFIX ".cjs")
   endif()
+
+  add_test(NAME Catch2Test_ThreadedExecution_NoErrors
+    COMMAND
+      npx node run_Catch2Test.js
+    WORKING_DIRECTORY
+      ${CMAKE_CURRENT_BINARY_DIR})
+  
   catch_discover_tests(sampleTest)
 endif()
 # npx node sampleTest.cjs
