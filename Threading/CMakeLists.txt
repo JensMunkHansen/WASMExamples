@@ -154,14 +154,14 @@ if (BUILD_TESTING)
     target_link_options(sampleTest PRIVATE
       ${emscripten_link_options})
     set_target_properties(sampleTest PROPERTIES SUFFIX ".cjs")
+
+    add_test(NAME Catch2Test_ThreadedExecution_NoErrors
+      COMMAND
+        npx node run_Catch2Test.js
+      WORKING_DIRECTORY
+        ${CMAKE_CURRENT_BINARY_DIR})
   endif()
 
-  add_test(NAME Catch2Test_ThreadedExecution_NoErrors
-    COMMAND
-      npx node run_Catch2Test.js
-    WORKING_DIRECTORY
-      ${CMAKE_CURRENT_BINARY_DIR})
-  
   catch_discover_tests(sampleTest)
 endif()
 # npx node sampleTest.cjs
