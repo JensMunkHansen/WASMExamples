@@ -4,3 +4,4 @@
 build/
 emsdk/
 /**/build
+/**/compile_commands.json
