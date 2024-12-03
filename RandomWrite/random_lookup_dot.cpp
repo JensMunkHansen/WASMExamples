@@ -6,7 +6,7 @@
 
 constexpr size_t BUFFER_SIZE = 4 * 1024 * 1024; // 4 MB buffer, interpreted as floats
 constexpr size_t NUM_RANDOM_INDICES = 10000;    // Number of random indices to precompute
-constexpr size_t REPETITIONS = 1000;            // Number of repetitions for performance measurement
+constexpr size_t REPETITIONS = 10000;           // Number of repetitions for performance measurement
 
 float compute_length(float x, float y, float z)
 {

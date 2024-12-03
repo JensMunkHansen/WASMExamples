@@ -12,7 +12,7 @@ constexpr size_t BUFFER_SIZE = 4 * 1024 * 1024; // Total buffer size in bytes
 constexpr size_t ELEMENT_SIZE = sizeof(std::array<float, 4>);
 constexpr size_t NUM_ELEMENTS = BUFFER_SIZE / ELEMENT_SIZE; // Number of elements
 constexpr size_t NUM_RANDOM_INDICES = 10000;                // Number of random lookups
-constexpr size_t REPETITIONS = 1000; // Repetitions for performance measurement
+constexpr size_t REPETITIONS = 10000; // Repetitions for performance measurement
 
 // Custom aligned allocator
 template <typename T, std::size_t Alignment>
