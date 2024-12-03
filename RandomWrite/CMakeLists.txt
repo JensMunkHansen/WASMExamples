@@ -9,7 +9,6 @@ option(WASM64 "64-bit WASM" OFF)
 
 if(EMSCRIPTEN)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msimd128")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -msimd128 --target=wasm64")
   if (WASM64)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --target=wasm64")
   endif()
@@ -32,7 +31,14 @@ if(EMSCRIPTEN)
     set_target_properties(random_lookup_dot PROPERTIES LINK_FLAGS "--bind")
     set_target_properties(random_lookup_dot_array PROPERTIES OUTPUT_NAME "random_lookup_dot_array.js")
     set_target_properties(random_lookup_dot_array PROPERTIES LINK_FLAGS "--bind")
+
+    set(WASM_FILE "$<TARGET_FILE_DIR:random_lookup_dot_array>/$<TARGET_FILE_BASE_NAME:random_lookup_dot_array>.wasm")
     
+    add_custom_command(
+      TARGET random_lookup_dot_array POST_BUILD
+      COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_BINARY_DIR}/random_lookup_dot_array.s
+      COMMENT "Generating assembly output (.s) for WebAssembly"
+    )    
 else()
   # Custom target to generate assembly
   add_custom_target(assembly
