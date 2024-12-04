@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+</head>
+
+<body>
+  <script>
+    var Module
+      = {
+      preRun: []
+      , postRun: []
+      , print: function (e) {
+        1 < arguments.length && (e = Array.prototype.slice.call(arguments).join(" "));
+        console.log(e);
+      }
+      , printErr: function (e) {
+        1 < arguments.length && (e = Array.prototype.slice.call(arguments).join(" "));
+        console.error(e)
+      }
+    };
+    Module.dynamicLibraries = ['side.wasm'];
+  </script>
+  <script async src="main.js"></script>
+</body>
+
+</html>
