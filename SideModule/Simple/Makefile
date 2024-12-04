@@ -1,3 +1,3 @@
 all:
-	emcc side.c -s SIDE_MODULE=1 -o side.wasm
-	emcc main.c -s MAIN_MODULE=1 -s RUNTIME_LINKED_LIBS="['side.wasm']" -o main.html
+	emcc side.c -s SIDE_MODULE=2 -s EXPORTED_FUNCTIONS="['_side', '_CreateMyStruct']" -o side.wasm
+	emcc main.c -s MAIN_MODULE=2 side.wasm -o main.html

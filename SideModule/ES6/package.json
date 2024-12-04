@@ -1,0 +1,17 @@
+{
+  "type": "module",
+  "dependencies": {
+    "v8": "^0.1.0",
+    "vm": "^0.1.0"
+  },
+  "name": "build",
+  "version": "1.0.0",
+  "main": "run_SmartPointerTest.js",
+  "scripts": {
+      "smartpointer": "node run_SmartPointerTest.js",
+      "callback": "node run_CallbackTest.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}

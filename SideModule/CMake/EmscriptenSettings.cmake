@@ -9,6 +9,7 @@ emscripten_settings(
   EXPORT_NAME                   <variable>
   OPTIMIZATION                  <NONE, LITTLE, MORE, BEST, SMALL, SMALLEST, SMALLEST_WITH_CLOSURE>
   DEBUG                         <NONE, READABLE_JS, PROFILE, DEBUG_NATIVE>
+  EMSCRIPTEN_EXPORTED_FUNCTIONS <variable>
   EMSCRIPTEN_DEBUG_INFO         <variable>
   EMSCRIPTEN_LINK_OPTIONS       <variable>
   EMSCRIPTEN_OPTIMIZATION_FLAGS <variable>)
@@ -20,7 +21,7 @@ threads.
 
 function(emscripten_settings)
   # Define the arguments that the function accepts
-  set(options)  # Boolean options (without ON/OFF). We have none
+  set(options)  # Boolean options (without ON/OFF).
   set(one_value_args
     THREADING_ENABLED
     EMBIND
@@ -31,15 +32,13 @@ function(emscripten_settings)
     EMSCRIPTEN_LINK_OPTIONS
     EMSCRIPTEN_OPTIMIZATION_FLAGS
     EMSCRIPTEN_DEBUG_INFO
-  )
-  set(multi_value_args
-    SIDE_MODULES
+    EMSCRIPTEN_EXPORTED_FUNCTIONS
   )
 
   # Parse the arguments using cmake_parse_arguments
   cmake_parse_arguments(ARGS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGV})
 
-  # Validate required arguments
+  # Validate presence of required output arguments
   if (NOT ARGS_EMSCRIPTEN_LINK_OPTIONS)
     message(FATAL_ERROR "EMSCRIPTEN_LINK_OPTIONS must be specified.")
   endif()
@@ -50,6 +49,10 @@ function(emscripten_settings)
 
   if (NOT ARGS_EMSCRIPTEN_DEBUG_INFO)
     message(FATAL_ERROR "EMSCRIPTEN_OPTIMIZATION_FLAGS must be specified.")
+  endif()
+
+  if (NOT ARGS_EMSCRIPTEN_EXPORTED_FUNCTIONS)
+    message(FATAL_ERROR "EMSCRIPTEN_EXPORTED_FUNCTIONS must be specified.")
   endif()
   
   # Default values  
@@ -62,6 +65,8 @@ function(emscripten_settings)
   if (NOT DEFINED ARGS_EMBIND)
     set(ARGS_EMBIND OFF)
   endif()
+
+  # Default arguments for debug and optimization
   if (NOT DEFINED ARGS_OPTIMIZATION)
     set(ARGS_OPTIMIZATION "NONE")
   endif()
@@ -90,6 +95,7 @@ function(emscripten_settings)
   # Populate lists
   set(emscripten_debug_info)
   set(emscripten_link_options)
+  set(emscripten_exported_functions)
   
   # Set the optimization flags based on OPTIMIZATION value
   if (ARGS_OPTIMIZATION STREQUAL "NONE")
@@ -133,27 +139,32 @@ function(emscripten_settings)
     list(APPEND emscripten_debug_info
       "-gsource-map")
   endif()
-  
+
+  # Default linker options
   list(APPEND emscripten_link_options
     "-sASSERTIONS=1"
     "-sERROR_ON_UNDEFINED_SYMBOLS=1"
     "-sNO_EXIT_RUNTIME=0")
 
+  # Link to embind
   if (ARGS_EMBIND STREQUAL "ON")
     list(APPEND emscripten_link_options
       "-lembind")
   endif()
 
+  # Handle ES6 modules
   if (ARGS_ES6_MODULE STREQUAL "ON")
+    list(APPEND emscripten_exported_functions "free")
+    list(APPEND emscripten_exported_functions "malloc")
     list(APPEND emscripten_link_options
       "-sMODULARIZE=1"
       "-sEXPORT_ES6=1"
-      "-sEXPORTED_FUNCTIONS=['_free', '_malloc']"
       "-sEXPORTED_RUNTIME_METHODS=['ENV', 'FS', 'ccall', 'stringToNewUTF8', 'addFunction']"
       "-sINCLUDE_FULL_LIBRARY"
       "-sALLOW_TABLE_GROWTH=1"
       "-sALLOW_MEMORY_GROWTH=1"
       "-sEXPORT_NAME=${ARGS_EXPORT_NAME}")
+
     if (ARGS_THREADING_ENABLED STREQUAL "ON")
       list(APPEND emscripten_link_options
         "-sENVIRONMENT=web,node,worker"
@@ -168,11 +179,11 @@ function(emscripten_settings)
       package.json
       package-lock.json
     )
-  
+    # Consider throwing if no package.json exists
     foreach(node_file ${node_files})
       if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${node_file}")
         add_custom_command(
-          TARGET ${TARGET_NAME}
+          TARGET ${ARGS_TARGET_NAME}
           COMMAND
           ${CMAKE_COMMAND} -E copy_if_different
           "${CMAKE_CURRENT_SOURCE_DIR}/${node_file}"
@@ -180,6 +191,7 @@ function(emscripten_settings)
       endif()
     endforeach()
 
+    # Install npm
     add_custom_command(
       TARGET ${TARGET_NAME}
       POST_BUILD
@@ -198,6 +210,8 @@ function(emscripten_settings)
       )  
     endif()
   endif()
+
+  # TODO: Handle number of threads
   if (ARGS_THREADING_ENABLED STREQUAL "ON")
     list(APPEND emscripten_link_options
       "-sUSE_PTHREADS=1"
@@ -216,12 +230,18 @@ endfunction()
 Create a WASM Emscripten module
 .. code-block:: cmake
 emscripten_module(
+  SIDE_MODULE
+  MAIN_MODULE
   TARGET_NAME                   <variable>
   SOURCE_FILES                  <list>
   JAVASCRIPT_FILES              <list>
   TRHEADING_ENABLED             <ON|OFF>
   EMBIND                        <ON|OFF>
+  OPTIMIZATION                  <variable>
+  DEBUG                         <variable>  
   ES6_MODULE                    <ON|OFF>
+  SIDE_MODULES                  <list>
+  EXPORTED_FUNCTIONS            <list>
   EXPORT_NAME                   <variable>
   OPTIMIZATION                  <NONE, LITTLE, MORE, BEST, SMALL, SMALLEST, SMALLEST_WITH_CLOSURE>
   DEBUG                         <NONE, READABLE_JS, PROFILE, DEBUG_NATIVE>)
@@ -230,9 +250,9 @@ emscripten_module(
 
 function(emscripten_module)
   # Define the arguments that the function accepts
-  set(options)
+  set(options SIDE_MODULE MAIN_MODULE)
   set(one_value_args TARGET_NAME ES6_MODULE EMBIND EXPORT_NAME DEBUG OPTIMIZATION)
-  set(multi_value_args SOURCE_FILES JAVASCRIPT_FILES)
+  set(multi_value_args SOURCE_FILES JAVASCRIPT_FILES SIDE_MODULES EXPORTED_FUNCTIONS)
 
   # Parse the arguments using cmake_parse_arguments
   cmake_parse_arguments(ARGS "${options}" "${one_value_args}" "${multi_value_args}" ${ARGV})
@@ -245,6 +265,14 @@ function(emscripten_module)
     message(FATAL_ERROR "SOURCE_FILES must be specified.")
   endif()
 
+  # Default arguments for optimization and debug
+  if (NOT ARGS_OPTIMIZATION)
+    set(ARGS_OPTIMIZATION "NONE")
+  endif()
+  if (NOT ARGS_DEBUG)
+    set(ARGS_DEBUG "NONE")
+  endif()
+  
   # Add executable
   add_executable(${ARGS_TARGET_NAME} ${ARGS_SOURCE_FILES})
 
@@ -252,6 +280,7 @@ function(emscripten_module)
   set(emscripten_link_options)
   set(emscripten_optimization_flags)
   set(emscripten_debug_info)
+  set(emscripten_exported_functions)
 
   # Call emscripten_settings with the provided arguments
   emscripten_settings(
@@ -260,15 +289,53 @@ function(emscripten_module)
     EXPORT_NAME ${ARGS_EXPORT_NAME}
     DEBUG ${ARGS_DEBUG}
     OPTIMIZATION ${ARGS_OPTIMIZATION}
+    EMSCRIPTEN_EXPORTED_FUNCTIONS emscripten_exported_functions
     EMSCRIPTEN_LINK_OPTIONS emscripten_link_options
     EMSCRIPTEN_OPTIMIZATION_FLAGS emscripten_optimization_flags
     EMSCRIPTEN_DEBUG_INFO emscripten_debug_info
   )
 
+  if (ARGS_EXPORTED_FUNCTIONS)
+    list(APPEND emscripten_exported_functions ${ARGS_EXPORTED_FUNCTIONS})
+  endif()
+  
+  if (ARGS_SIDE_MODULE)
+    list(APPEND emscripten_link_options
+      "-sSIDE_MODULE=2")
+  endif()
+
+  # Main modules can link to shared modules, only tested for ANSI-C
+  if (ARGS_MAIN_MODULE)
+    if (ARGS_SIDE_MODULES)
+      list(APPEND emscripten_link_options "-sMAIN_MODULE=2" ${ARGS_SIDE_MODULES})
+    endif()
+  endif()
+
+  # Exported functions
+  set(prefixed_functions)
+  foreach(func ${emscripten_exported_functions})
+    list(APPEND prefixed_functions "'_${func}'")
+  endforeach()
+
+  # Convert the list to a comma-separated string and wrap in square brackets
+  string(REPLACE ";" "," exported_functions_comma "${prefixed_functions}")
+  string(CONCAT exported_functions_str "[" "${exported_functions_comma}" "]")
+
+  # Here add the exports
+  list(APPEND emscripten_link_options
+    "-sEXPORTED_FUNCTIONS=${exported_functions_str}")
+  
   # Link and compile options
   target_link_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_link_options})
-  target_compile_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_optimization_flags})
+  target_compile_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_optimization_flags} "-fPIC")
 
+  # Side modules must be renamed
+  if (ARGS_SIDE_MODULE)
+    set_target_properties(${ARGS_TARGET_NAME} PROPERTIES
+      SUFFIX ".wasm")
+  endif()
+
+  # Copy any JavaScript files
   foreach(javascript_file ${ARGS_JAVASCRIPT_FILES})
     set(copyTarget ${TARGET_NAME}_copy_${javascript_file})
     add_custom_target(
