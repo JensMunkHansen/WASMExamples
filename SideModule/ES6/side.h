@@ -2,7 +2,7 @@
 #define _SIDE_H
 
 // WebAssembly itself doesn't export types like structs or classes. You must rely
-// on ccall, cwrap or embind
+// on ccall, cwrap or embind (to host memory)
 
 #ifdef __cplusplus
 extern "C"
