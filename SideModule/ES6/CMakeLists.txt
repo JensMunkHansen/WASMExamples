@@ -22,13 +22,15 @@ include(EmscriptenSettings)
 emscripten_module(
   SIDE_MODULE
   ES6_MODULE OFF
+  THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
-  EXPORTED_FUNCTIONS "CreateMyStruct"
+  EXPORTED_FUNCTIONS "CreateMyStruct;GetValue;SetValue"
   SOURCE_FILES "side.c")
 
 emscripten_module(
   MAIN_MODULE
   ES6_MODULE ON
+  THREADING_ENABLED ON
   EMBIND ON
   EXPORT_NAME "loadES6Test"
   DEBUG "READABLE_JS"

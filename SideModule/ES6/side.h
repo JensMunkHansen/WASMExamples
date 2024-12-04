@@ -8,8 +8,18 @@
 extern "C"
 {
 #endif
+
+#ifdef IS_SIDE_MODULE
   struct MyStruct;
+#elif IS_MAIN_MODULE
+struct MyStruct
+{
+  float a;
+};
+#endif
   void CreateMyStruct(struct MyStruct* s);
+  float GetValue(struct MyStruct* s);
+  void SetValue(struct MyStruct* s);
 
 #ifdef __cplusplus
 }

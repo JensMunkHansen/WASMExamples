@@ -210,13 +210,15 @@ function(emscripten_settings)
       )  
     endif()
   endif()
+  list(APPEND emscripten_exported_functions "printf")
 
   # TODO: Handle number of threads
   if (ARGS_THREADING_ENABLED STREQUAL "ON")
     list(APPEND emscripten_link_options
       "-sUSE_PTHREADS=1"
       "-sSHARED_MEMORY=1"
-      "-sPTHREAD_POOL_SIZE_STRICT=4")
+      "-sINITIAL_MEMORY=64MB"
+      "-sPTHREAD_POOL_SIZE=4")
   endif()
 
   # Assign the options list to the specified variable
@@ -250,8 +252,8 @@ emscripten_module(
 
 function(emscripten_module)
   # Define the arguments that the function accepts
-  set(options SIDE_MODULE MAIN_MODULE)
-  set(one_value_args TARGET_NAME ES6_MODULE EMBIND EXPORT_NAME DEBUG OPTIMIZATION)
+  set(options SIDE_MODULE MAIN_MODULE VERBOSE)
+  set(one_value_args TARGET_NAME ES6_MODULE EMBIND EXPORT_NAME DEBUG OPTIMIZATION THREADING_ENABLED)
   set(multi_value_args SOURCE_FILES JAVASCRIPT_FILES SIDE_MODULES EXPORTED_FUNCTIONS)
 
   # Parse the arguments using cmake_parse_arguments
@@ -288,6 +290,7 @@ function(emscripten_module)
     EMBIND ${ARGS_EMBIND}
     EXPORT_NAME ${ARGS_EXPORT_NAME}
     DEBUG ${ARGS_DEBUG}
+    THREADING_ENABLED ${ARGS_THREADING_ENABLED}
     OPTIMIZATION ${ARGS_OPTIMIZATION}
     EMSCRIPTEN_EXPORTED_FUNCTIONS emscripten_exported_functions
     EMSCRIPTEN_LINK_OPTIONS emscripten_link_options
@@ -307,7 +310,9 @@ function(emscripten_module)
   # Main modules can link to shared modules, only tested for ANSI-C
   if (ARGS_MAIN_MODULE)
     if (ARGS_SIDE_MODULES)
+      list(APPEND emscripten_exported_functions "printf")
       list(APPEND emscripten_link_options "-sMAIN_MODULE=2" ${ARGS_SIDE_MODULES})
+      #list(APPEND emscripten_link_options "-sENVIRONMENT=web,worker")
     endif()
   endif()
 
@@ -324,15 +329,26 @@ function(emscripten_module)
   # Here add the exports
   list(APPEND emscripten_link_options
     "-sEXPORTED_FUNCTIONS=${exported_functions_str}")
+
+  # Position-independent code
+  set(PIC)
+  if (ARGS_SIDE_MODULE OR ARGS_MAIN_MODULE)
+    set(PIC "-fPIC")
+  endif()
   
   # Link and compile options
   target_link_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_link_options})
-  target_compile_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_optimization_flags} "-fPIC")
+  target_compile_options(${ARGS_TARGET_NAME} PRIVATE ${emscripten_optimization_flags} ${PIC})
 
+  # TODO: Rename threaded output .js to .mjs (required by CTest)
+  
   # Side modules must be renamed
   if (ARGS_SIDE_MODULE)
     set_target_properties(${ARGS_TARGET_NAME} PROPERTIES
       SUFFIX ".wasm")
+    target_compile_definitions(${ARGS_TARGET_NAME} PRIVATE IS_SIDE_MODULE)    
+  elseif(ARGS_MAIN_MODULE)
+    target_compile_definitions(${ARGS_TARGET_NAME} PRIVATE IS_MAIN_MODULE)    
   endif()
 
   # Copy any JavaScript files
