@@ -56,19 +56,28 @@ function(emscripten_settings)
     set(ARGS_ES6_MODULE ON)
   endif()
   if (NOT DEFINED ARGS_OPTIMIZATION)
-    set(ARGS_OPTIMIZATION NONE)
+    set(ARGS_OPTIMIZATION "NONE")
   endif()
   if (NOT DEFINED ARGS_DEBUG)
-    set(ARGS_DEBUG NONE)
+    set(ARGS_DEBUG "NONE")
+  endif()
+  message(${ARGS_OPTIMIZATION})
+
+  # Define valid options for OPTIMIZATION
+  set(valid_optimization_levels NONE LITTLE MORE BEST SMALL SMALLEST SMALLEST_WITH_CLOSURE)
+  
+  # Validate OPTIMIZATION argument
+  list(FIND valid_optimization_levels "${ARGS_OPTIMIZATION}" opt_index)
+  if (opt_index EQUAL -1)
+    message(FATAL_ERROR "Invalid value for OPTIMIZATION. Must be one of NONE, LITTLE, or MORE.")
   endif()
 
-  # Validate OPTIMIZATION argument
-  if (NOT ARGS_OPTIMIZATION IN_LIST "NONE;LITTLE;MORE;BEST;SMALL;SMALLEST;SMALLEST_WITH_CLOSURE")
-    message(FATAL_ERROR "Invalid value for OPTIMIZATION. Must be one of NONE, LITTLE, MORE, BEST, SMALL, SMALLEST or SMALLEST_WITH_CLOSURE")
-  endif()  
-
+  # Define valid options for DEBUG
+  set(valid_debug_levels NONE READABLE_JS PROFILE DEBUG_NATIVE SOURCE_MAPS)
+  
   # Validate DEBUG argument
-  if (NOT ARGS_DEBUG IN_LIST "NONE;READABLE_JS;PROFILE;DEBUG_NATIVE;SOURCE_MAPS")
+  list(FIND valid_debug_levels "${ARGS_DEBUG}" opt_index)
+  if (opt_index EQUAL -1)
     message(FATAL_ERROR "Invalid value for DEBUG. Must be one of NONE, READABLE_JS, PROFILE, DEBUG_NATIVE or SOURCE_MAPS")
   endif()
 
@@ -102,27 +111,21 @@ function(emscripten_settings)
   # Set the debug flags based on DEBUG value
   if(ARGS_DEBUG STREQUAL "NONE")
     list(APPEND emscripten_debug_info
-      "-g0"
-    )
+      "-g0")
   elseif(ARGS_DEBUG STREQUAL "READABLE_JS")
     list(APPEND emscripten_debug_info
-      "-g1"
-    )
+      "-g1")
   elseif(ARGS_DEBUG STREQUAL "PROFILE")
     list(APPEND emscripten_debug_info
-      "-g2"
-    )
+      "-g2")
   elseif(ARGS_DEBUG STREQUAL "DEBUG_NATIVE")
     list(APPEND emscripten_debug_info
-      "-g3"
-    )
+      "-g3")
     list(APPEND emscripten_link_options
-      "-sASSERTIONS=1"
-    )
+      "-sASSERTIONS=1")
   elseif(ARGS_DEBUG STREQUAL "SOURCE_MAPS")
     list(APPEND emscripten_debug_info
-      "-gsource-map"
-    )
+      "-gsource-map")
   endif()
   
   list(APPEND emscripten_link_options
