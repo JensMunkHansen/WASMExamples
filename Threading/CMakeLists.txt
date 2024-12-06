@@ -2,6 +2,9 @@ cmake_minimum_required(VERSION 3.22...3.28)
 
 project(Catch2Test)
 
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+include(EmscriptenSettings)
+
 option(THREADING_ENABLED OFF)
 set(_THREADING_ENABLED 0)
 if (THREADING_ENABLED)
@@ -22,6 +25,7 @@ if (BUILD_TESTING)
   find_package(Catch2 3.5.2 EXACT REQUIRED)
   include(CTest)
   include(Catch)
+  enable_testing()
 endif()
 
 include(GenerateExportHeader)
@@ -53,116 +57,47 @@ if (THREADING_ENABLED)
 endif()
 
 if (EMSCRIPTEN)
-  set(emscripten_optimization_flags -g2 -O0)
-  # It requires a .cxx file
-  add_executable(${LIBRARY_PROXY_NAME} dummy.cxx)
-  target_link_libraries(${LIBRARY_PROXY_NAME} PRIVATE ${LIBRARY_NAME})
-  
-  # -----------------------------------------------------------------------------
-  # WebAssembly build options
-  # -----------------------------------------------------------------------------
-  set(emscripten_link_options)
-  list(APPEND emscripten_link_options
-      "-sMODULARIZE=1" # Module
-      "-sEXPORT_ES6=1" # ES6
-      "-sEXPORTED_FUNCTIONS=['_free', '_malloc', '_DoWork']" # Memory and DoWork
-      "-sEXPORTED_RUNTIME_METHODS=['ENV', 'FS', 'ccall', 'stringToNewUTF8', 'addFunction']" # Standards including callbacks
-      "-sINCLUDE_FULL_LIBRARY" # Prevent deletion of stuff
-      "-sASSERTIONS=1"
-      "-sALLOW_TABLE_GROWTH=1" # Function pointers
-      "-sALLOW_MEMORY_GROWTH=1"
-      "-sMAXIMUM_MEMORY=2GB"
-      "-sERROR_ON_UNDEFINED_SYMBOLS=1" # Error tracking
-      "-sEXPORT_NAME=loadCatch2TestModule" # Module entry
-      "-sNO_EXIT_RUNTIME=0" # stdout always propagated      
+  emscripten_module(
+    ES6_MODULE ON
+    THREADING_ENABLED ${THREADING_ENABLED}
+    TARGET_NAME ${LIBRARY_PROXY_NAME}
+    EXPORTED_FUNCTIONS "DoWork"
+    SOURCE_FILES dummy.cxx
+    JAVASCRIPT_FILES "index.html;run_Catch2Test.js"
+    EXPORT_NAME "loadCatch2TestModule"
+    OPTIMIZATION NONE
+    LIBRARIES ${LIBRARY_NAME}
+    DEBUG PROFILE
   )
-  if (THREADING_ENABLED)
-    # Web with threading
-    list(APPEND emscripten_link_options
-      "-sENVIRONMENT=web,node,worker"
-      "-sUSE_PTHREADS=1"
-      "-sSHARED_MEMORY=1"
-      "-sPTHREAD_POOL_SIZE=4"
-    )  
-  else()
-    # Web, no threading
-    list(APPEND emscripten_link_options
-      "-sENVIRONMENT=web,node"
-    )  
-  endif()
-  list(APPEND emscripten_link_options
-    "${emscripten_optimization_flags}")
-
-  target_link_options(${LIBRARY_PROXY_NAME} PRIVATE
-    ${emscripten_link_options})
-  
-  set(script_files
-    index.html
-    run_Catch2Test.js
-    package.json
-    package-lock.json
-  )
-  
-  foreach(script_file ${script_files})
-    set(copyTarget ${LIBRARY_PROXY_NAME}_copy_${script_file})
-    add_custom_target(
-      ${copyTarget}
-      COMMAND
-        ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/${script_file}"
-        "${CMAKE_CURRENT_BINARY_DIR}")
-    add_dependencies(${LIBRARY_PROXY_NAME} ${copyTarget})
-  endforeach()
-  # We need this if we also make a test using a .js file
-  add_custom_command(
-    TARGET ${LIBRARY_PROXY_NAME}
-    POST_BUILD
-    COMMAND
-      npm install
-    WORKING_DIRECTORY
-      ${CMAKE_CURRENT_BINARY_DIR})
 else()
   add_executable(${TARGET_NAME} main.cxx)
   target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARY_NAME}) 
 endif()
 
 if (BUILD_TESTING)
-  add_executable(sampleTest test.cxx)
-  target_link_libraries(sampleTest PRIVATE library)
-  target_link_libraries(sampleTest PRIVATE Catch2::Catch2WithMain)
+  add_test(NAME Catch2Test_ThreadedExecution_NoErrors
+    COMMAND
+    npx node run_Catch2Test.js
+    WORKING_DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR})
+endif()
+
+if (BUILD_TESTING)
   if (EMSCRIPTEN)
-    # Standard Catch2 test as a .cjs file
-    set(emscripten_link_options)
-    # The testing is not an ES6 module
-    list(APPEND emscripten_link_options
-      "-sASSERTIONS=1"
-      "-sERROR_ON_UNDEFINED_SYMBOLS=1"
-      "-sNO_EXIT_RUNTIME=0"
-    )
-    if (THREADING_ENABLED)
-      list(APPEND emscripten_link_options
-        "-sUSE_PTHREADS=1"
-        "-sSHARED_MEMORY=1"
-        "-sPTHREAD_POOL_SIZE_STRICT=4"
-        "-sENVIRONMENT=node,worker"
-      )  
-    else()
-      list(APPEND emscripten_link_options
-        "-sENVIRONMENT=node"
-      )  
-    endif()
-    target_link_options(sampleTest PRIVATE
-      ${emscripten_link_options})
-    set_target_properties(sampleTest PROPERTIES SUFFIX ".cjs")
-
-    add_test(NAME Catch2Test_ThreadedExecution_NoErrors
-      COMMAND
-        npx node run_Catch2Test.js
-      WORKING_DIRECTORY
-        ${CMAKE_CURRENT_BINARY_DIR})
+    # TODO: Not working
+    emscripten_module(
+      TARGET_NAME sampleTest
+      SOURCE_FILES test.cxx
+      LIBRARIES "${LIBRARY_NAME};Catch2::Catch2WithMain"
+      ES6_MODULE OFF
+      THREADING_ENABLED ${THREADING_ENABLED})
+  else()
+    add_executable(sampleTest test.cxx)
+    target_link_libraries(sampleTest PRIVATE library)
+    target_link_libraries(sampleTest PRIVATE Catch2::Catch2WithMain)
   endif()
-
   catch_discover_tests(sampleTest)
+
 endif()
 # npx node sampleTest.cjs
 
