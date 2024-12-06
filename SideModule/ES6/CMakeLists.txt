@@ -5,7 +5,7 @@ project(ES6Test
 
 set(TARGET_NAME ES6Test)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(EmscriptenSettings)
 
 # We get linker errors if this is C++

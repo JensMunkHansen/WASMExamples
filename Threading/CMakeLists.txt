@@ -84,11 +84,11 @@ endif()
 
 if (BUILD_TESTING)
   if (EMSCRIPTEN)
-    # TODO: Not working
+    set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
     emscripten_module(
       TARGET_NAME sampleTest
       SOURCE_FILES test.cxx
-      LIBRARIES "${LIBRARY_NAME};Catch2::Catch2WithMain"
+      LIBRARIES ${LIBRARY_NAME} Catch2::Catch2WithMain
       ES6_MODULE OFF
       THREADING_ENABLED ${THREADING_ENABLED})
   else()
@@ -97,7 +97,6 @@ if (BUILD_TESTING)
     target_link_libraries(sampleTest PRIVATE Catch2::Catch2WithMain)
   endif()
   catch_discover_tests(sampleTest)
-
 endif()
 # npx node sampleTest.cjs
 

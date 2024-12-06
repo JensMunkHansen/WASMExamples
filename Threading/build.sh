@@ -20,6 +20,6 @@ if [ "$platform" = "linux" ]; then
 elif [ "$platform" = "wasm" ]; then
     source "$HOME/github/emsdk/emsdk_env.sh"
 #    emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release
-    emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DTHREADING_ENABLED=ON -DCMAKE_FIND_ROOT_PATH=/home/jmh/github/Catch2CMake/install
+    emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DTHREADING_ENABLED=OFF -DCMAKE_FIND_ROOT_PATH=/home/jmh/github/Catch2CMake/install
     cmake --build build_wasm -j 16
 fi
