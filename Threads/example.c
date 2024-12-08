@@ -1,3 +1,4 @@
+#include <emscripten.h>
 #include <pthread.h>
 #include <stdio.h>
 
@@ -45,6 +46,18 @@ void* worker2(void* arg)
 
 int main()
 {
+  int poolSize = EM_ASM_INT({
+    if (typeof PThread !== 'undefined' && PThread.unusedWorkers)
+    {
+      return PThread.unusedWorkers.length;
+    }
+    else
+    {
+      console.error("PThread or unusedWorkers is not defined.");
+      return -1; // Return -1 to indicate an error
+    }
+  });
+  printf("Pool size: %d\n", poolSize);
   pthread_t thread1, thread2;
   int value = 0;
 
