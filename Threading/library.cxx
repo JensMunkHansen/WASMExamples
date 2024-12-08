@@ -62,6 +62,13 @@ void* worker2(void* arg)
 
 int DoWork()
 {
+#if 0
+  int poolSize = EM_ASM_INT({
+    return PThread.unusedWorkers.length(); // Number of pre-allocated threads
+  });
+
+  std::cout << "Pre-allocated thread pool size: " << poolSize << std::endl;
+#endif
   std::ostringstream oss;
   size_t nThreads = emscripten_num_logical_cores();
   oss << "Starting: DoWork(): available threads: " << nThreads << "\n";
