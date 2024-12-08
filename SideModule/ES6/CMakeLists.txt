@@ -35,7 +35,6 @@ emscripten_module(
   EXPORT_NAME "loadES6Test"
   DEBUG "READABLE_JS"
   OPTIMIZATION "NONE"
-  #EXPORTED_FUNCTIONS "main"
   TARGET_NAME ${TARGET_NAME}
   SIDE_MODULES "TypeLibrary.wasm"
   SOURCE_FILES "ES6Test.cxx"

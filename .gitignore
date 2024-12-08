@@ -9,3 +9,5 @@ emsdk/
 /**/.vscode/
 /**/build_wasm/
 /**/*.worker.js
+/**/node_modules/
+/**/*.wasm.js

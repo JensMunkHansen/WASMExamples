@@ -1,0 +1,2 @@
+add_subdirectory(ShareViaHost)
+add_subdirectory(SharedHeap)

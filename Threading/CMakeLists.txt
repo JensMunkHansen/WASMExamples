@@ -69,6 +69,9 @@ if (EMSCRIPTEN)
     LIBRARIES ${LIBRARY_NAME}
     DEBUG PROFILE
   )
+  target_compile_options(${LIBRARY_PROXY_NAME} PRIVATE 
+    -matomics 
+    -mbulk-memory)  
 else()
   add_executable(${TARGET_NAME} main.cxx)
   target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARY_NAME}) 
