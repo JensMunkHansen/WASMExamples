@@ -1,13 +1,16 @@
-#include "config.h"
 #include "library.h"
+#include "config.h"
 
-#include <pthread.h>
 #include <cstdlib>
+#include <emscripten.h>
+#include <emscripten/threading.h>
 #include <iostream>
+#include <pthread.h>
 #include <sstream>
 
 #if _THREADING_ENABLED
-namespace {
+namespace
+{
 pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
 int threads_started = 0;
@@ -60,10 +63,11 @@ void* worker2(void* arg)
 int DoWork()
 {
   std::ostringstream oss;
-  oss << "Starting: DoWork()" << "\n";
+  size_t nThreads = emscripten_num_logical_cores();
+  oss << "Starting: DoWork(): available threads: " << nThreads << "\n";
   std::cout << oss.str();
   oss.clear();
-  
+
 #if _THREADING_ENABLED
   pthread_t thread1, thread2;
   int value = 0;
@@ -71,7 +75,7 @@ int DoWork()
   oss << "Main thread: initial value is " << value << "\n";
   std::cout << oss.str();
   oss.clear();
-  
+
   // Create worker threads
   if (pthread_create(&thread1, NULL, worker1, &value) != 0)
   {

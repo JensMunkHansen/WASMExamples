@@ -59,7 +59,9 @@ endif()
 if (EMSCRIPTEN)
   emscripten_module(
     ES6_MODULE ON
+    VERBOSE
     THREADING_ENABLED ${THREADING_ENABLED}
+    THREAD_POOL_SIZE 4
     TARGET_NAME ${LIBRARY_PROXY_NAME}
     EXPORTED_FUNCTIONS "DoWork"
     SOURCE_FILES dummy.cxx
@@ -89,6 +91,7 @@ if (BUILD_TESTING)
   if (EMSCRIPTEN)
     set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
     emscripten_module(
+      VERBOSE
       TARGET_NAME sampleTest
       SOURCE_FILES test.cxx
       LIBRARIES ${LIBRARY_NAME} Catch2::Catch2WithMain
