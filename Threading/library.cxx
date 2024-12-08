@@ -64,22 +64,8 @@ int DoWork()
 {
   EM_ASM({ console.log('hello'); });
   int k = EM_ASM_INT({ return PThread.unusedWorkers.length });
-  std::cout << k << std::endl;
-#if 0
-  int poolSize = EM_ASM_INT({
-    if (typeof PThread != = 'undefined' && PThread.unusedWorkers)
-    {
-      return PThread.unusedWorkers.length; // This will not be altered
-    }
-    else
-    {
-      console.error("PThread or unusedWorkers is not defined.");
-      return -1; // Return -1 to indicate an error
-    }
-  });
+  std::cout << "Unused workers: " << k << std::endl;
 
-  std::cout << "Pre-allocated thread pool size: " << poolSize << std::endl;
-#endif
   std::ostringstream oss;
   size_t nThreads = emscripten_num_logical_cores();
   oss << "Starting: DoWork(): available threads: " << nThreads << "\n";
