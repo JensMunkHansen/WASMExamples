@@ -5,3 +5,7 @@ build/
 emsdk/
 /**/build
 /**/compile_commands.json
+/**/.cache/
+/**/.vscode/
+/**/build_wasm/
+/**/*.worker.js
