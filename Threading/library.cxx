@@ -62,9 +62,20 @@ void* worker2(void* arg)
 
 int DoWork()
 {
+  EM_ASM({ console.log('hello'); });
+  int k = EM_ASM_INT({ return PThread.unusedWorkers.length });
+  std::cout << k << std::endl;
 #if 0
   int poolSize = EM_ASM_INT({
-    return PThread.unusedWorkers.length(); // Number of pre-allocated threads
+    if (typeof PThread != = 'undefined' && PThread.unusedWorkers)
+    {
+      return PThread.unusedWorkers.length; // This will not be altered
+    }
+    else
+    {
+      console.error("PThread or unusedWorkers is not defined.");
+      return -1; // Return -1 to indicate an error
+    }
   });
 
   std::cout << "Pre-allocated thread pool size: " << poolSize << std::endl;
