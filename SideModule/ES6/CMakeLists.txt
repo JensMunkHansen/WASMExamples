@@ -21,7 +21,7 @@ include(EmscriptenSettings)
 # Type library in ANSI-C
 emscripten_module(
   SIDE_MODULE
-  64_BIT ON
+  64_BIT ${64_BIT}
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
@@ -30,7 +30,7 @@ emscripten_module(
 
 emscripten_module(
   MAIN_MODULE
-  64_BIT ON
+  64_BIT ${64_BIT}
   ES6_MODULE ON
   THREADING_ENABLED ON
   EMBIND ON
