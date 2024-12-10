@@ -5,6 +5,7 @@ project(Catch2Test)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(EmscriptenSettings)
 
+option(64_BIT OFF)
 option(THREADING_ENABLED OFF)
 set(_THREADING_ENABLED 0)
 if (THREADING_ENABLED)
@@ -52,6 +53,11 @@ target_include_directories(${LIBRARY_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 
+# 64-bit
+if (64_BIT) 
+  target_compile_options(${LIBRARY_NAME} PRIVATE "-target=wasm64")
+endif()
+
 if (THREADING_ENABLED)
   target_link_libraries(${LIBRARY_NAME} PRIVATE Threads::Threads)
 
@@ -64,6 +70,7 @@ endif()
 
 if (EMSCRIPTEN)
   emscripten_module(
+    64_BIT ${64_BIT}
     ES6_MODULE ON
     VERBOSE
     THREADING_ENABLED ${THREADING_ENABLED}
@@ -98,6 +105,7 @@ if (BUILD_TESTING)
     set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
     emscripten_module(
       VERBOSE
+      64_BIT ${64_BIT}
       TARGET_NAME sampleTest
       SOURCE_FILES test.cxx
       LIBRARIES ${LIBRARY_NAME} Catch2::Catch2WithMain
