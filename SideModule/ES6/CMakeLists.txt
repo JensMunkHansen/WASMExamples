@@ -6,7 +6,7 @@ project(ES6Test
 set(TARGET_NAME ES6Test)
 option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
-include(EmscriptenSettings)
+include(spsEmscriptenSettings)
 
 # We get linker errors if this is C++
 
@@ -19,7 +19,7 @@ include(EmscriptenSettings)
 # and implementations, which WebAssembly does not natively support.
 
 # Type library in ANSI-C
-emscripten_module(
+sps_emscripten_module(
   SIDE_MODULE
   64_BIT ${64_BIT}
   ES6_MODULE OFF
@@ -28,7 +28,7 @@ emscripten_module(
   EXPORTED_FUNCTIONS "CreateMyStruct;GetValue;SetValue"
   SOURCE_FILES "side.c")
 
-emscripten_module(
+sps_emscripten_module(
   MAIN_MODULE
   64_BIT ${64_BIT}
   ES6_MODULE ON

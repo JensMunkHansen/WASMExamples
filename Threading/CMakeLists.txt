@@ -69,7 +69,7 @@ endif()
 
 
 if (EMSCRIPTEN)
-  emscripten_module(
+  sps_emscripten_module(
     64_BIT ${64_BIT}
     ES6_MODULE ON
     VERBOSE
@@ -103,7 +103,7 @@ endif()
 if (BUILD_TESTING)
   if (EMSCRIPTEN)
     set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
-    emscripten_module(
+    sps_emscripten_module(
       VERBOSE
       64_BIT ${64_BIT}
       TARGET_NAME sampleTest
