@@ -7,9 +7,9 @@ TEST_CASE("TestMe")
 {
   std::cout << "Hello\n";
   // Makes it stuck
-  // size_t nMaxThreads = static_cast<std::size_t>(std::thread::hardware_concurrency());
+  size_t nMaxThreads = static_cast<std::size_t>(std::thread::hardware_concurrency());
 
-  //  std::cout << nMaxThreads << std::endl;
+  std::cout << nMaxThreads << std::endl;
 
   std::cout << static_cast<std::size_t>(EM_ASM_INT({ return PThread.unusedWorkers.length }))
             << std::endl;
