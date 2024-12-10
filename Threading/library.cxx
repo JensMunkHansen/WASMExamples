@@ -7,6 +7,8 @@
 #include <iostream>
 #include <pthread.h>
 #include <sstream>
+#include <thread>
+#include <pthread.h>
 
 #if _THREADING_ENABLED
 namespace
@@ -34,6 +36,26 @@ void* worker1(void* arg)
   std::cout << oss.str();
   pthread_mutex_unlock(&mutex);
 
+#if 0
+  // EMSCRIPTEN does not support naming pthreads!!!!
+  std::thread::id thread_id = std::this_thread::get_id();
+
+  // Convert thread ID to string
+  std::ostringstream oss2;
+  oss2 << thread_id;
+  std::string id_str = oss2.str();
+
+  // Ensure the name fits within the POSIX limit (16 bytes including null terminator)
+  if (id_str.length() > 15) {
+    id_str = id_str.substr(0, 15); // Truncate to fit the limit
+  }
+  // Set the thread name
+  pthread_setname_np(pthread_self(), id_str.c_str());
+
+  char thread_name[16];
+  pthread_getname_np(pthread_self(), thread_name, sizeof(thread_name));
+  std::cout << thread_name << std::endl;
+#endif
   return NULL;
 }
 
@@ -96,6 +118,7 @@ int DoWork()
     oss.clear();
     return EXIT_FAILURE;
   }
+  
   if (pthread_create(&thread2, NULL, worker2, &value) != 0)
   {
     oss << "Error creating thread 2\n";

@@ -54,7 +54,13 @@ target_include_directories(${LIBRARY_NAME}
 
 if (THREADING_ENABLED)
   target_link_libraries(${LIBRARY_NAME} PRIVATE Threads::Threads)
+
+  target_compile_options(${LIBRARY_NAME} PRIVATE 
+    -matomics 
+    -mbulk-memory)  
 endif()
+
+
 
 if (EMSCRIPTEN)
   emscripten_module(
