@@ -60,6 +60,14 @@ void* worker2(void* arg)
 } // namespace
 #endif
 
+#if 0
+if (typeof Module !== 'undefined' && Module.unusedWorkers) {
+        return Module.unusedWorkers.length;
+    } else {
+        return 0;
+ }
+#endif
+
 int DoWork()
 {
   EM_ASM({ console.log('hello'); });
