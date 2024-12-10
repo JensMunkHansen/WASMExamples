@@ -4,7 +4,7 @@ project(ES6Test
   LANGUAGES C CXX)
 
 set(TARGET_NAME ES6Test)
-
+option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(EmscriptenSettings)
 
@@ -21,6 +21,7 @@ include(EmscriptenSettings)
 # Type library in ANSI-C
 emscripten_module(
   SIDE_MODULE
+  64_BIT ON
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
@@ -29,6 +30,7 @@ emscripten_module(
 
 emscripten_module(
   MAIN_MODULE
+  64_BIT ON
   ES6_MODULE ON
   THREADING_ENABLED ON
   EMBIND ON
