@@ -6,7 +6,7 @@ project(ES6Test
 set(TARGET_NAME ES6Test)
 option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
-include(EmscriptenSettings)
+include(spsEmscriptenSettings)
 
 # We get linker errors if this is C++
 
@@ -21,15 +21,18 @@ include(EmscriptenSettings)
 # Type library in ANSI-C
 sps_emscripten_module(
   SIDE_MODULE
+  VERBOSE
   64_BIT ${64_BIT}
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
   EXPORTED_FUNCTIONS "CreateMyStruct;GetValue;SetValue"
+  DEBUG "READABLE_JS"
   SOURCE_FILES "side.c")
 
 sps_emscripten_module(
   MAIN_MODULE
+  VERBOSE
   64_BIT ${64_BIT}
   ES6_MODULE ON
   THREADING_ENABLED ON
