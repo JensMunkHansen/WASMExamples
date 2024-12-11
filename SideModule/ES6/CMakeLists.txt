@@ -6,7 +6,7 @@ project(ES6Test
 set(TARGET_NAME ES6Test)
 option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
-include(spsEmscriptenSettings)
+include(EmscriptenSettings)
 
 # We get linker errors if this is C++
 
