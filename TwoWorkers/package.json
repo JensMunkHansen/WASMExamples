@@ -1,0 +1,13 @@
+{
+  "name": "twoworkers",
+  "version": "1.0.0",
+  "description": "MODULARIZE with ES6",
+  "type": "module",  
+  "main": "main.js",
+  "scripts": {
+    "test": "node main.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
