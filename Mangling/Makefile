@@ -27,7 +27,7 @@ $(EXPORTED_FUNCTIONS_JSON): $(LIB)
 
 # Target to build the final WebAssembly module
 output.js: $(LIB) $(EXPORTED_FUNCTIONS_JSON)
-	$(EMCC) -o $@ $(LIB) -s EXPORTED_FUNCTIONS=$(shell cat $(EXPORTED_FUNCTIONS_JSON))
+	$(EMCC) -o $@ $(LIB) -sSINGLE_FILE=1 -sENVIRONMENT='node' -sMODULARIZE=1 -sEXPORTED_FUNCTIONS=$(shell cat $(EXPORTED_FUNCTIONS_JSON))
 
 all:	output.js
 # Clean

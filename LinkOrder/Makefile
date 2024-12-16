@@ -1,7 +1,7 @@
 all:
 	g++ -c factory_and_base.cpp -o factory_and_base.o && ar rcs libfactory_and_base.a factory_and_base.o
 	g++ -c derived.cpp -o derived.o && ar rcs libderived.a derived.o
-	#g++ main.cpp -L. -lderived -lfactory_and_base -o program # Not working
+	#g++ main.cpp -L. -lderived -lfactory_and_base -lderived -o program # Not working
 	g++ main.cpp -L. -lfactory_and_base -lderived -o program # First resolves for the latter
 
 # it resolves symbols on a "first come, first serve" basis and does not revisit libraries already processed
