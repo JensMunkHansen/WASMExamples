@@ -11,3 +11,5 @@ emsdk/
 /**/*.worker.js
 /**/node_modules/
 /**/*.wasm.js
+*.o
+*.a

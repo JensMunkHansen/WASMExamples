@@ -1,0 +1,21 @@
+cmake_minimum_required(VERSION 3.22...3.28)
+
+project(Stdio)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+include(spsEmscriptenSettings)
+
+if (EMSCRIPTEN)
+  sps_emscripten_module(
+    ES6_MODULE OFF
+    VERBOSE
+    FILE_SYSTEM ON
+    ASYNCIFY ON
+    TARGET_NAME example
+    SOURCE_FILES example.c
+    EXPORTED_FUNCTIONS "display_prompt;process_input"
+    JAVASCRIPT_FILES "stdio.js"
+    OPTIMIZATION NONE
+    DEBUG READABLE_JS
+  )
+endif()
