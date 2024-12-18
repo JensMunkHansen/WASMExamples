@@ -19,6 +19,7 @@ int main()
 {
   int current_count = main_call_count.fetch_add(1, std::memory_order_acquire);
 
+  // With '-sINVOKE_RUN=0`, we don't need this.
   if (current_count > 0) {
       // If main_called was already true, main has been called before
       std::cerr << "Error: main_function has already been called!" << std::endl;
