@@ -9,7 +9,6 @@ if (EMSCRIPTEN)
   sps_emscripten_module(
     ES6_MODULE OFF
     VERBOSE
-    #FILE_SYSTEM ON
     ASYNCIFY OFF
     EXIT_RUNTIME OFF
     EXPORTED_FUNCTIONS malloc;free
@@ -17,6 +16,7 @@ if (EMSCRIPTEN)
     SOURCE_FILES example.cpp
     JAVASCRIPT_FILES "stdio.js"
     OPTIMIZATION NONE
+    EXTRA_LINK_ARGS "-sINVOKE_RUN=0"
     DEBUG DEBUG_NATIVE
   )
 endif()
