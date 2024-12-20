@@ -1,4 +1,3 @@
 #!/bin/bash
 
-rm -Rf $(pwd)/SideModule/ES6/build
-rm -Rf $(pwd)/Threading/build_wasm
+find . -name build -type d | xargs -i -t rm -Rf {}
