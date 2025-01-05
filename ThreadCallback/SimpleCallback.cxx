@@ -4,6 +4,10 @@
 #include <pthread.h>
 #include <thread>
 
+using MyCallbackType = void (*)(const char*);
+
+MyCallbackType g_callback;
+
 // Plain-old C function callback
 extern "C"
 {
@@ -24,6 +28,11 @@ extern "C"
   }
 }
 
+void RegisterRuntimeCallback(MyCallbackType callback)
+{
+  g_callback = callback;
+}
+
 // Pthread function to invoke the callback
 void* ThreadFunction(void* arg)
 {
@@ -32,6 +41,7 @@ void* ThreadFunction(void* arg)
   // Call the registered callback
   MyCallback(message);
 
+  g_callback(message);
   return nullptr;
 }
 
@@ -39,6 +49,13 @@ int main()
 {
   // Register the callback during startup
   RegisterCallback();
+
+  MyCallbackType myCallback = [](const char* message)
+  {
+    std::cout << "Runtime callback executed in thread: " << pthread_self()
+              << ", Message: " << message << std::endl;
+  };
+  RegisterRuntimeCallback(myCallback);
 
   // Create a pthread
   pthread_t thread;

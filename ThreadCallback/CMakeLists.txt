@@ -5,16 +5,106 @@ project(Catch2Test)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(spsEmscriptenSettings)
 
+find_package(VTK
+  COMPONENTS
+    CommonCore
+)
+
+# C/C++ callback
 sps_emscripten_module(
   ES6_MODULE OFF
   VERBOSE
   THREADING_ENABLED ON
   THREAD_POOL_SIZE 4
-  TARGET_NAME main
-  SOURCE_FILES main.cxx
+  TARGET_NAME SimpleCallback
+  SOURCE_FILES SimpleCallback.cxx
   OPTIMIZATION NONE
   DEBUG PROFILE
 )
+
+# VTK callback
+sps_emscripten_module(
+  ES6_MODULE OFF
+  VERBOSE
+  THREADING_ENABLED ON
+  THREAD_POOL_SIZE 4
+  TARGET_NAME VTKCallback
+  LIBRARIES VTK::CommonCore
+  SOURCE_FILES VTKCallback.cxx
+  OPTIMIZATION NONE
+  DEBUG PROFILE
+)
+
+# JavaScript callback (same thread)
+sps_emscripten_module(
+  ES6_MODULE ON
+  VERBOSE
+  THREADING_ENABLED ON
+  THREAD_POOL_SIZE 4
+  TARGET_NAME JSCallbackTest
+  EXPORT_NAME loadJSCallbackTestModule
+  JAVASCRIPT_FILES run_JSCallbackTest.js
+  EXPORTED_FUNCTIONS invokeCallback
+  INITIAL_MEMORY 1GB
+  SOURCE_FILES JSCallback.cxx
+  EMBIND ON
+  OPTIMIZATION NONE
+  DEBUG PROFILE
+)
+
+sps_emscripten_module(
+  ES6_MODULE ON
+  VERBOSE
+  THREADING_ENABLED ON
+  THREAD_POOL_SIZE 4
+  TARGET_NAME JSCallbackThreadJoinableTest
+  EXPORT_NAME loadJSCallbackTestModule
+  JAVASCRIPT_FILES run_JSCallbackThreadJoinableTest.js
+  INITIAL_MEMORY 1GB
+  ASYNCIFY ON
+  SOURCE_FILES JSCallbackThreadJoinable.cxx # JSCallbackThread.cxx (works)
+  EMBIND ON
+  OPTIMIZATION NONE
+  DEBUG PROFILE
+)
+sps_emscripten_module(
+  ES6_MODULE ON
+  VERBOSE
+  THREADING_ENABLED ON
+  THREAD_POOL_SIZE 4
+  TARGET_NAME JSCallbackThreadDetachedTest
+  EXPORT_NAME loadJSCallbackDetachedTestModule
+  JAVASCRIPT_FILES run_JSCallbackThreadDetachedTest.js
+  INITIAL_MEMORY 1GB
+  MAXIMUM_MEMORY 4GB
+  ASYNCIFY ON
+  SOURCE_FILES JSCallbackThreadDetached.cxx # JSCallbackThread.cxx (works)
+  EMBIND ON
+  OPTIMIZATION NONE
+  DEBUG PROFILE
+)
+
+
+# Not working
+if (0)
+sps_emscripten_module(
+  ES6_MODULE ON
+  VERBOSE
+  THREADING_ENABLED ON
+  THREAD_POOL_SIZE 4
+  TARGET_NAME ES6CallbackTest
+  JAVASCRIPT_FILES run_ES6CallbackTest.js
+  EXPORT_NAME loadES6CallbackTestModule
+  INITIAL_MEMORY 1GB
+  SOURCE_FILES ES6Callback.cxx
+  EMBIND ON
+  OPTIMIZATION NONE
+  DEBUG PROFILE
+)
+endif()
+
+
+
 
 
 
