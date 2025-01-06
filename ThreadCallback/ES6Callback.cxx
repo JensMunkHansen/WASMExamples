@@ -107,3 +107,11 @@ EMSCRIPTEN_BINDINGS(callback_module)
 
   emscripten::function("startPthread", &startPthread);
 }
+
+// PTHREAD
+// MAIN_THREAD_ASYNC_EM_ASM (try this), MAIN_THREAD_EM_ASM*() foo__proxy: 'sync'/'async'
+// emscripten_dispatch_to_thread()
+// WASM worker
+// emscripten_wasm_worker_t worker = emscripten_malloc_wasm_worker(/*stackSize: */1024);
+// emscripten_wasm_worker_post_function_v(worker, run_in_worker);//
+// emscripten_wasm_worker_post_function_*

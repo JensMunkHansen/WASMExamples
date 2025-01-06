@@ -21,6 +21,12 @@ void* pthreadWorker(void* arg)
     [](void* msg)
     {
       const char* message = static_cast<const char*>(msg);
+      // Call a C function compiled to WebAssembly from JavaScript
+      // name matching export, return type ("number", "string")
+      // types of the functions arguments, e.g. number, string, array or custom type
+      // array containing the actual arguments, must match tyhe types
+      // convert memory pointer $0 to a JavaScript string
+      // If string is allocated, remember to frree
       EM_ASM(
         {
           console.log("Executing async call in main thread...");

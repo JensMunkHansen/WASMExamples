@@ -76,7 +76,6 @@ sps_emscripten_module(
   EXPORT_NAME loadJSCallbackDetachedTestModule
   JAVASCRIPT_FILES run_JSCallbackThreadDetachedTest.js
   INITIAL_MEMORY 1GB
-  MAXIMUM_MEMORY 4GB
   ASYNCIFY ON
   SOURCE_FILES JSCallbackThreadDetached.cxx # JSCallbackThread.cxx (works)
   EMBIND ON
@@ -86,7 +85,7 @@ sps_emscripten_module(
 
 
 # Not working
-if (0)
+if (1)
 sps_emscripten_module(
   ES6_MODULE ON
   VERBOSE
