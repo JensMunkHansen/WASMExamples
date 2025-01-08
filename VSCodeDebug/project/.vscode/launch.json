@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Chrome",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "file": "${workspaceFolder}/index.html",
+      "webRoot": "${workspaceFolder}"
+    },
+{
+  "label": "Stop Server",
+  "type": "shell",
+  "command": "bash",
+  "args": [
+    "-c",
+    "kill $(ps aux | grep 'npx serve' | grep -v grep | awk '{print $2}')"
+  ],
+  "problemMatcher": []
+}  
+  ]
+}
