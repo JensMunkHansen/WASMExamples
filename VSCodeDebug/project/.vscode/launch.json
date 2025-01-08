@@ -8,15 +8,14 @@
       "file": "${workspaceFolder}/index.html",
       "webRoot": "${workspaceFolder}"
     },
-{
-  "label": "Stop Server",
-  "type": "shell",
-  "command": "bash",
-  "args": [
-    "-c",
-    "kill $(ps aux | grep 'npx serve' | grep -v grep | awk '{print $2}')"
-  ],
-  "problemMatcher": []
-}  
+    {
+      "name": "Launch Chrome with Server",
+      "type": "pwa-chrome",
+      "request": "launch",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}",
+      "preLaunchTask": "Start Server2",
+      "postDebugTask": "Stop Server2"
+    }      
   ]
 }

@@ -61,7 +61,7 @@ sps_emscripten_module(
   EXPORT_NAME loadJSCallbackTestModule
   JAVASCRIPT_FILES run_JSCallbackThreadJoinableTest.js
   INITIAL_MEMORY 1GB
-  ASYNCIFY ON
+  ASYNCIFY OFF
   SOURCE_FILES JSCallbackThreadJoinable.cxx # JSCallbackThread.cxx (works)
   EMBIND ON
   OPTIMIZATION NONE
@@ -74,6 +74,7 @@ sps_emscripten_module(
   THREAD_POOL_SIZE 4
   TARGET_NAME JSCallbackThreadDetachedTest
   EXPORT_NAME loadJSCallbackDetachedTestModule
+  EXPORTED_FUNCTIONS notifyCallback
   JAVASCRIPT_FILES run_JSCallbackThreadDetachedTest.js
   INITIAL_MEMORY 1GB
   ASYNCIFY ON

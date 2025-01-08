@@ -1,0 +1,61 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Start Server",
+      "type": "shell",
+      "command": "npx",
+        "args": ["serve", "-l", "8080"],
+"problemMatcher": [],  // Explicitly indicate no problem matcher
+      "isBackground": true,
+      "options": {
+        "cwd": "${workspaceFolder}"
+      },
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Start Server2",
+      "type": "shell",
+      "command": "node",
+      "args": ["serverManager.js", "start"],
+      "problemMatcher": [],
+      "isBackground": true,
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared"
+      },
+      "options": {
+        "cwd": "${workspaceFolder}"  // Ensure this points to the folder containing `serverManager.js`
+      }    
+    },
+    {
+      "label": "Stop Server",
+      "type": "shell",
+      "isBackground": true,
+      "command": "bash",
+      "args": [
+        "-c",
+        "ps aux | grep '/node_modules/.bin/serve' | awk -F\" \" '{print $2}' | xargs kill"
+      ],
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "always",
+        "panel": "shared",
+        "showReuseMessage": true
+      },
+    },
+    {
+        "label": "Stop Server2",
+        "type": "shell",
+        "command": "node",
+        "args": ["serverManager.js", "stop"],
+        "problemMatcher": [],
+        "options": {
+           "cwd": "${workspaceFolder}"  // Ensure this points to the folder containing `serverManager.js`
+        }    
+    }
+  ]
+}

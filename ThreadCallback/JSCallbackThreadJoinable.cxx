@@ -27,7 +27,7 @@ void* pthreadWorker(void* arg)
       // array containing the actual arguments, must match tyhe types
       // convert memory pointer $0 to a JavaScript string
       // If string is allocated, remember to frree
-      EM_ASM(
+      MAIN_THREAD_EM_ASM(
         {
           console.log("Executing async call in main thread...");
           Module.ccall('notifyCallback', null, ['string'], [UTF8ToString($0)]);

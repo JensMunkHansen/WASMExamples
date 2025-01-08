@@ -29,7 +29,7 @@ void* pthreadWorker(void* arg)
     [](void* msg)
     {
       const char* message = static_cast<const char*>(msg);
-      EM_ASM(
+      MAIN_THREAD_EM_ASM(
         {
           console.log("Executing async call in main thread...");
           Module.ccall('notifyCallback', null, ['string'], [UTF8ToString($0)]);
@@ -60,6 +60,8 @@ void* pthreadWorker(void* arg)
 // Starts a pthread
 void startPthread()
 {
+  std::cout << "startPthread: " << std::this_thread::get_id() << std::endl;
+
   pthread_t thread;
   if (pthread_create(&thread, nullptr, pthreadWorker, nullptr) != 0)
   {
@@ -99,6 +101,7 @@ extern "C"
   EMSCRIPTEN_KEEPALIVE
   void notifyCallback(const char* message)
   {
+    std::cout << "notifyCallback: " << std::this_thread::get_id() << std::endl;
     std::cout << "notifyCallback called with message: " << message << std::endl;
   }
 }
