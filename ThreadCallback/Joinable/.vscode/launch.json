@@ -1,0 +1,54 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+"type": "node",
+      "request": "launch",
+      "name": "Launch Server with Custom Script",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": [
+        "node",
+        "run_JSCallbackThreadJoinableTest.js"
+      ],
+      "cwd": "${workspaceFolder}/build/${command:cmake.buildType}",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "integratedTerminal",
+      "sourceMaps": true,
+      "skipFiles": ["<node_internals>/**"]
+        },
+	{
+            "name": "Launch (works without ES6)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/build/Debug/index.html",
+            "webRoot": "${workspaceFolder}/build/Debug",
+            "preLaunchTask": "StartServer",
+            "sourceMaps": true,
+            "runtimeArgs": [
+                "--enable-experimental-webassembly-features",
+                "--allow-file-access-from-files",
+                "--user-data-dir=/tmp/chrome-test"
+            ]
+        },
+	{
+            "name": "LaunchShell",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/shell.html",
+            "preLaunchTask": "StartServer",
+        },
+        {
+            "name": "Launch with npx serve",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}/build/Debug",
+            "preLaunchTask": "StartServer",
+            "runtimeArgs": [
+              "--allow-file-access-from-files"
+            ]
+        }        
+    ]	
+}

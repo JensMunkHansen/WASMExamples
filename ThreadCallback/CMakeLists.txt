@@ -67,29 +67,6 @@ sps_emscripten_module(
   VERBOSE
   THREADING_ENABLED ON
   THREAD_POOL_SIZE 4
-  TARGET_NAME JSCallbackThreadJoinableTest
-  EXPORT_NAME loadJSCallbackTestModule
-  JAVASCRIPT_FILES run_JSCallbackThreadJoinableTest.js
-  INITIAL_MEMORY 1GB
-  ASYNCIFY OFF
-  SOURCE_FILES JSCallbackThreadJoinable.cxx # JSCallbackThread.cxx (works)
-  EMBIND ON
-  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
-)
-
-add_test(NAME ThreadCallback_AsynJoinable_NoErrors
-  COMMAND
-  npx node run_JSCallbackThreadJoinableTest.js
-  WORKING_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR})
-
-
-sps_emscripten_module(
-  ES6_MODULE ON
-  VERBOSE
-  THREADING_ENABLED ON
-  THREAD_POOL_SIZE 4
   TARGET_NAME JSCallbackThreadDetachedTest
   EXPORT_NAME loadJSCallbackDetachedTestModule
   EXPORTED_FUNCTIONS notifyCallback

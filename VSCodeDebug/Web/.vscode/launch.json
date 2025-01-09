@@ -1,0 +1,19 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+	{
+            "name": "Launch (works without ES6)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/build/Debug/${command:cmake.launchTargetFilename}",
+            "preLaunchTask": "StartServer",
+        },
+	{
+            "name": "LaunchShell",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/shell.html",
+            "preLaunchTask": "StartServer",
+        }
+    ]	
+}

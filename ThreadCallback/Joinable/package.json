@@ -1,0 +1,11 @@
+{
+  "type": "module",
+  "version": "1.0.0",
+  "main": "build",
+  "scripts": {
+    "threadInvoke": "node run_ES6CallbackTest.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
