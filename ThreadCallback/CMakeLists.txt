@@ -1,14 +1,17 @@
 cmake_minimum_required(VERSION 3.22...3.28)
 
-project(Catch2Test)
+project(ThreadCallback)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(spsEmscriptenSettings)
+sps_set_emscripten_defaults(${PROJECT_NAME})
 
 find_package(VTK
   COMPONENTS
     CommonCore
 )
+include(CTest)
+enable_testing()
 
 # C/C++ callback
 sps_emscripten_module(
@@ -18,8 +21,8 @@ sps_emscripten_module(
   THREAD_POOL_SIZE 4
   TARGET_NAME SimpleCallback
   SOURCE_FILES SimpleCallback.cxx
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
 
 # VTK callback
@@ -31,8 +34,8 @@ sps_emscripten_module(
   TARGET_NAME VTKCallback
   LIBRARIES VTK::CommonCore
   SOURCE_FILES VTKCallback.cxx
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
 
 # JavaScript callback (same thread)
@@ -48,9 +51,16 @@ sps_emscripten_module(
   INITIAL_MEMORY 1GB
   SOURCE_FILES JSCallback.cxx
   EMBIND ON
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
+
+add_test(NAME ThreadCallback_JSInvoke_NoErrors
+  COMMAND
+  npx node run_JSCallbackTest.js
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR})
+
 
 sps_emscripten_module(
   ES6_MODULE ON
@@ -64,9 +74,17 @@ sps_emscripten_module(
   ASYNCIFY OFF
   SOURCE_FILES JSCallbackThreadJoinable.cxx # JSCallbackThread.cxx (works)
   EMBIND ON
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
+
+add_test(NAME ThreadCallback_AsynJoinable_NoErrors
+  COMMAND
+  npx node run_JSCallbackThreadJoinableTest.js
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR})
+
+
 sps_emscripten_module(
   ES6_MODULE ON
   VERBOSE
@@ -80,13 +98,19 @@ sps_emscripten_module(
   ASYNCIFY ON
   SOURCE_FILES JSCallbackThreadDetached.cxx # JSCallbackThread.cxx (works)
   EMBIND ON
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
+
+add_test(NAME ThreadCallback_AsynDetached_NoErrors
+  COMMAND
+  npx node run_JSCallbackThreadDetachedTest.js
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR})
 
 
 # Not working
-if (1)
+if (0)
 sps_emscripten_module(
   ES6_MODULE ON
   VERBOSE
@@ -98,8 +122,8 @@ sps_emscripten_module(
   INITIAL_MEMORY 1GB
   SOURCE_FILES ES6Callback.cxx
   EMBIND ON
-  OPTIMIZATION NONE
-  DEBUG PROFILE
+  OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
+  DEBUG ${${PROJECT_NAME}_DEBUG}
 )
 endif()
 

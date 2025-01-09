@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<body>
+  <script type="module">
+    import loadES6Module from './ES6.js';
+
+    // Define options for the WASM module
+    const options = {
+      print: (...args) => console.info(args.join(' ')), // Simplified
+      printErr: (...args) => console.error(args.join(' ')), // Simplified
+    };
+
+    // Wrap the logic in an async function
+    (async () => {
+      try {
+        // Load the WASM module
+        const wasmModule = await loadES6Module(options);
+        // Call a function from the WASM module
+        wasmModule._HelloWorld();
+      } catch (error) {
+        console.error('Failed to load the WASM module:', error);
+      }
+    })();
+  </script>
+</body>
+</html>

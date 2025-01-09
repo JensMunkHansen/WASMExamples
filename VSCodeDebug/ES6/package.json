@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "name": "build",
+  "version": "1.0.0",
+  "main": "run.js",
+  "scripts": {
+    "start": "node run_ES6.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}

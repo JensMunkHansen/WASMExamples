@@ -1,0 +1,17 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "StartServer",
+            "type": "shell",
+            "command": "npx serve -p 3000 ${workspaceFolder}/build/Debug ",
+            "problemMatcher": [],
+            "isBackground": true,
+            "options": {
+              "env": {
+                "FORCE_COLOR": "true"
+              }
+            }
+        }
+    ]
+}

@@ -3,10 +3,16 @@ cmake_minimum_required(VERSION 3.15)
 project(ES6Test
   LANGUAGES C CXX)
 
+include(CTest)
+enable_testing()
+
 set(TARGET_NAME ES6Test)
 option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(spsEmscriptenSettings)
+
+sps_set_emscripten_defaults(WASMExamples)
+
 
 # We get linker errors if this is C++
 
@@ -45,3 +51,8 @@ sps_emscripten_module(
   SOURCE_FILES "ES6Test.cxx"
   JAVASCRIPT_FILES "run_ES6Test.js")
 
+add_test(NAME ES6_SideModule_NoErrors
+  COMMAND
+  npx node run_ES6Test.js
+  WORKING_DIRECTORY
+  ${CMAKE_CURRENT_BINARY_DIR})
