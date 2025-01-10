@@ -5,15 +5,44 @@
             "name": "Launch (works without ES6)",
             "type": "chrome",
             "request": "launch",
-            "url": "http://localhost:3000/build/Debug/index.html",
+            "url": "http://localhost:3000/index.html",
+//            "url": "file://${workspaceFolder}/build/Debug/index.html",
             "webRoot": "${workspaceFolder}/build/Debug",
+            "preLaunchTask": "StartServer",
+            "sourceMaps": true,
+            "tracing": true,
+            "pathMapping": {
+                "/": "${workspaceFolder}/build/Debug"
+//                "file:///" : "/",
+//                "file:///emsdk/emscripten/": "/home/jmh/github/emsdk/upstream/emscripten",
+            },
+            "sources": ["file:///{workspaceFolder}/Simple.cxx"],
+            "sourceRoot": "${workspaceFolder}"            
+            "runtimeArgs": [
+                "--enable-experimental-webassembly-features",
+                "--allow-file-access-from-files"                
+            ]
+        },
+	{
+            "name": "Launch (root)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/build/Debug/index.html",
+            "webRoot": "${workspaceFolder}",
             "preLaunchTask": "StartServer",
             "sourceMaps": true,
             "runtimeArgs": [
                 "--enable-experimental-webassembly-features",
-                "--allow-file-access-from-files",
-                "--user-data-dir=/tmp/chrome-test"
+                "--allow-file-access-from-files"
             ]
+        },
+        {
+            "name": "Attach to Chrome",
+            "type": "chrome",
+            "request": "attach",
+            "port": 9222,
+            "webRoot": "${workspaceFolder}/build/Debug",
+            "url": "http://localhost:3000/build/Debug/index.html"
         },
 	{
             "name": "LaunchShell",
