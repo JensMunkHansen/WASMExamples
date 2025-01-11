@@ -14,8 +14,7 @@
             // When launched from node it tries to locate localhost:3000/Simple.cxx
             "pathMapping": {
                 "/": "${workspaceFolder}",
-                "file://" : "${workspaceFolder}/build/Debug",
-                "file://emsdk/emscripten/": "${env:EMSDK}/upstream/emscripten"
+                "file://" : "${workspaceFolder}/build/Debug"
             },
             "runtimeArgs": [
                 "--enable-experimental-webassembly-features",

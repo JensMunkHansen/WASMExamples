@@ -1,0 +1,25 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "StartServer",
+            "type": "process",
+            "command": "${input:startServer}"
+        },
+        {
+            "type": "cmake",
+            "label": "CMake: clean",
+            "command": "clean",
+            "preset": "${command:cmake.activeBuildPresetName}",
+            "problemMatcher": [],
+            "detail": "CMake template clean task"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "startServer",
+            "type": "command",
+            "command": "livePreview.runServerLoggingTask"
+        }
+    ]
+}

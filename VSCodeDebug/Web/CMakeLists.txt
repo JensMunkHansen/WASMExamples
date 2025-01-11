@@ -3,11 +3,16 @@ project(hello)
 
 add_executable(hello hello.c)
 target_include_directories(hello PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-set(emscripten_optimization_flags -g3 -O0)
+# DWARF only - no symbol maps
+#set(emscripten_optimization_flags  -O0)
+
+# With source map, symlink /emsdk to match the upstream folder in Emscripten.
+set(emscripten_optimization_flags  -O0 -gsource-map)
 # Only works, if MODULARIZE=0 and no ES6
 target_link_options(hello PUBLIC
   "-sUSE_WEBGL2=1"
-#  "-sMODULARIZE=1"
+  #  "-sMODULARIZE=1"
+  "-sASYNCIFY=1" # Test to enter Emscripten C++ code
   "--shell-file=../shell.html"  
 #  "-sEXPORT_ES6=1"  
 #  "-sEXPORTED_RUNTIME_METHODS=\"ccall\", \"cwrap\", \"addFunction\""
