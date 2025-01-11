@@ -23,6 +23,7 @@ sps_emscripten_module(
 )
 
 # Add a post-build custom command (symbols have root in this folder!!)
+if (0)
 add_custom_command(
     TARGET ${TARGET_NAME}
     POST_BUILD
@@ -31,3 +32,4 @@ add_custom_command(
         "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/"       # Destination directory
     COMMENT "Copying Simple.cxx to output directory"
 )
+endif()
