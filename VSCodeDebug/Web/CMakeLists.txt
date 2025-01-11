@@ -3,8 +3,9 @@ project(hello)
 
 add_executable(hello hello.c)
 target_include_directories(hello PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
-# DWARF only - no symbol maps
-#set(emscripten_optimization_flags  -O0)
+# DWARF only - no symbol maps -gdwarf
+#set(emscripten_optimization_flags  -O0 -gdwarf)
+#set(emscripten_optimization_flags -O0 -g3)
 
 # With source map, symlink /emsdk to match the upstream folder in Emscripten.
 set(emscripten_optimization_flags  -O0 -gsource-map)
