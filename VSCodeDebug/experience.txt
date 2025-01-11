@@ -1,0 +1,6 @@
+If I enable source-maps, I can break in own code, stop in own code
+With DWARF only, I can break in own code, it stop in assembler...
+
+Question: Can it handle multiple source maps, it could before.
+
+Try to use source-map-merge
