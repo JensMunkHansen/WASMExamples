@@ -4,7 +4,7 @@
         {
             "label": "StartServer",
             "type": "shell",
-            "command": "npx serve -p 3000 ${workspaceFolder}/build/Debug ",
+            "command": "npx serve -p 3000 ${workspaceFolder}/build/Debug",
             "problemMatcher": [],
             "isBackground": true,
             "options": {
