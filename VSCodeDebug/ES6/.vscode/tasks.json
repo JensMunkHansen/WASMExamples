@@ -4,14 +4,12 @@
         {
             "label": "StartServer",
             "type": "shell",
-            "command": "npx serve -p 3000 ${workspaceFolder}/build/Debug",
+            "command": "npx serve -p 3000 .",
             "problemMatcher": [],
             "isBackground": true,
             "options": {
-              "env": {
-                "FORCE_COLOR": "true"
-              }
-            }
+                "cwd": "${workspaceFolder}/build/Debug" // Set the working directory
+            }            
         }
     ]
 }

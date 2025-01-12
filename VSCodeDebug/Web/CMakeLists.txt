@@ -22,7 +22,7 @@ target_link_options(hello PUBLIC
   "-sALLOW_TABLE_GROWTH=1"  
 #  "-sDEFAULT_LIBRARY_FUNCS_TO_INCLUDE='$addFunction'"  # Check if needed if full
   "${emscripten_optimization_flags}")
-
+# target_compile_options(hello PUBLIC --emit-symbol-map)
 if (CMAKE_SYSTEM_NAME STREQUAL Emscripten)
     set(CMAKE_EXECUTABLE_SUFFIX .html)
 endif()
