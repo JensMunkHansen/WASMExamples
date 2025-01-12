@@ -6,8 +6,8 @@
 
     ;; b64 encoding table
     ;; 0 is offset
-    (data (;0;) (i32.const 0) "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
-    ;;(data (;0;) (i32.const 1024) "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+    ;;(data (;0;) (i32.const 0) "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
+    (data (;0;) (i32.const 1024) "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
     ;; b64 encode function
     (func $b64encode (export "b64encode")
@@ -104,8 +104,8 @@
                         i32.shr_u ;; shift to position (stack = $val')
                         i32.const 63 ;; bit mask 0x3f (stack = $val', 63)
                         i32.and ;; apply bit mask (stack = $val' & 0x3f)
-                        i32.load8_u ;; encode character (stack = $out, $char)
-                        ;; i32.load8_u offset=1024
+                        ;;i32.load8_u ;; encode character (stack = $out, $char)
+                        i32.load8_u offset=1024
                         i32.store8 ;; store character
 
                         ;; increment step ;;
