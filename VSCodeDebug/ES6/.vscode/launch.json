@@ -27,14 +27,15 @@
             ]            
         },
         {
-            "type": "chrome",
+            "type": "pwa-chrome",
             "request": "attach",
             "name": "Attach to Chrome",
-            "port": 9222, // Port Chrome is using for remote debugging
-            },
-            "runtimeArgs": [
-              "--allow-file-access-from-files" // Ensure file:// URLs can be accessed
-            ],
+            "port": 9223, // Ensure this matches Chrome's debugging port
+            "url": "http://localhost:3000", // Replace with the correct server URL
+            "pathMapping": {
+                "/": "${workspaceFolder}/build/Debug",
+                "file://${workspaceFolder}": "${workspaceFolder}"
+            }
         },
 	{
             "name": "Launch (root)",
@@ -47,15 +48,15 @@
             "runtimeArgs": [
                 "--enable-experimental-webassembly-features",
                 "--allow-file-access-from-files",
-                "--remote-debugging-port=9222",
+                "--remote-debugging-port=9223",
                 "--disable-web-security"
             ]
         },
         {
-            "name": "Attach to Chrome",
+            "name": "Attach to Chrome (web root)",
             "type": "chrome",
             "request": "attach",
-            "port": 9222,
+            "port": 9223,
             "webRoot": "${workspaceFolder}/build/Debug",
             "url": "http://localhost:3000/build/Debug/index.html"
         },
