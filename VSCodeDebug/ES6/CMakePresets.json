@@ -13,7 +13,9 @@
             "generator": "Ninja Multi-Config",
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
+                "ES6_OPTIMIZATION": "NONE",
                 "ES6_DEBUG": "SOURCE_MAPS"
+//                "ES6_DEBUG": "DEBUG_NATIVE"
             }
         }
     ],
