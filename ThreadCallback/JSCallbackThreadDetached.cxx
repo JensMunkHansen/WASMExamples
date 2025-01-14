@@ -21,6 +21,7 @@ void* pthreadWorker(void* arg)
 {
 
   std::this_thread::sleep_for(std::chrono::seconds(1)); // Simulate work
+
   const char* result = "Hello from the pthread!";
   std::cout << "Pthread finished work, scheduling async call." << std::endl;
 

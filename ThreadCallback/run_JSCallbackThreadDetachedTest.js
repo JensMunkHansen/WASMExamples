@@ -6,7 +6,7 @@ import loadJSCallbackTestModule from './JSCallbackThreadDetachedTest.js';
     // Load the WebAssembly module
     const wasmModule = await loadJSCallbackTestModule(options);
     console.log("Module loaded");
-
+    
     // Create a promise to wait for the callback
     const callbackPromise = new Promise((resolve) => {
         // Define the JavaScript function to handle notifications
