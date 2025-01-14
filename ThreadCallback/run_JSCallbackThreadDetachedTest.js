@@ -13,6 +13,7 @@ import loadJSCallbackTestModule from './JSCallbackThreadDetachedTest.js';
         wasmModule.notifyCallback = (message) => {
             console.log("Callback received in JavaScript:", message);
             resolve(); // Resolve the promise when the callback is invoked
+            // TODO: Signal to thread that it can exit
         };
     });
 

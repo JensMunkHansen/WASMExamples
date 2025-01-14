@@ -43,13 +43,14 @@ void* pthreadWorker(void* arg)
         isAsyncCallComplete = true;
       }
       async_cv.notify_one();
-
+#if 0
       // Signal that the thread has completed
       {
         std::lock_guard<std::mutex> lock(cv_mtx);
         isThreadComplete = true;
       }
       cv.notify_one();
+#endif
     },
     const_cast<char*>(result), 0);
 
@@ -80,12 +81,13 @@ void startPthread()
     {
       std::cout << "Pthread detached successfully." << std::endl;
     }
-
+#if 0
     // Wait for the detached thread to signal completion
     {
       std::unique_lock<std::mutex> lock(cv_mtx);
       cv.wait(lock, [] { return isThreadComplete; });
     }
+#endif
     std::cout << "Main thread: Worker thread has completed." << std::endl;
 
     // Wait for the async call to complete
