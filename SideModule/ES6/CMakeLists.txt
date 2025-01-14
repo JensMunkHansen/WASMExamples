@@ -7,12 +7,14 @@ include(CTest)
 enable_testing()
 
 set(TARGET_NAME ES6Test)
-option(64_BIT OFF "64-bit compilation")
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
+include(spsEmscriptenDefaults)
+
+if (NOT DEFINED WASMExamples_DEBUG)
+  # We anticipate all options are set
+  sps_set_emscripten_defaults(WASMExamples)
+endif()
 include(spsEmscriptenSettings)
-
-sps_set_emscripten_defaults(WASMExamples)
-
 
 # We get linker errors if this is C++
 
@@ -28,24 +30,23 @@ sps_set_emscripten_defaults(WASMExamples)
 sps_emscripten_module(
   SIDE_MODULE
   VERBOSE
-  64_BIT ${64_BIT}
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
   EXPORTED_FUNCTIONS "CreateMyStruct;GetValue;SetValue"
-  DEBUG "READABLE_JS"
+  DEBUG ${WASMExamples_DEBUG}
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "side.c")
 
 sps_emscripten_module(
   MAIN_MODULE
   VERBOSE
-  64_BIT ${64_BIT}
   ES6_MODULE ON
   THREADING_ENABLED ON
   EMBIND ON
   EXPORT_NAME "loadES6Test"
-  DEBUG "READABLE_JS"
-  OPTIMIZATION "NONE"
+  DEBUG ${WASMExamples_DEBUG}
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   TARGET_NAME ${TARGET_NAME}
   SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/TypeLibrary.wasm"
   SOURCE_FILES "ES6Test.cxx"
