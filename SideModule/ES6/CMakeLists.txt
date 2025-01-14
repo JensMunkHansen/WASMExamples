@@ -47,7 +47,7 @@ sps_emscripten_module(
   DEBUG "READABLE_JS"
   OPTIMIZATION "NONE"
   TARGET_NAME ${TARGET_NAME}
-  SIDE_MODULES "TypeLibrary.wasm"
+  SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/TypeLibrary.wasm"
   SOURCE_FILES "ES6Test.cxx"
   JAVASCRIPT_FILES "run_ES6Test.js")
 
