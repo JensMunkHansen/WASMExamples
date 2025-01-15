@@ -22,6 +22,7 @@ sps_emscripten_module(
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
   DEBUG ${${PROJECT_NAME}_DEBUG}
 )
+# 131.0.6778.264 (Official Build) (64-bit)  (WORKS)
 
 # Add a post-build custom command (symbols have root in this folder!!)
 if (0)

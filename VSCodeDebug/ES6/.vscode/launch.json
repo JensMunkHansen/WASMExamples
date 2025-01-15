@@ -21,7 +21,6 @@
             "runtimeArgs": [
                 "--enable-experimental-webassembly-features",
                 "--allow-file-access-from-files",
-                "--disable-web-security",
                 "--remote-debugging-port=9222",
                 "--user-data-dir=${workspaceFolder}/.vscode/chrome-profile"
             ]            
