@@ -10,10 +10,27 @@
             "preLaunchTask": "StartServer",
             "sourceMaps": true,
             "skipFiles": ["<node_internals>/**"],
-            // Strange works if Simple.cxx is is top-folder
-            // Path mapping points to top folder
-            // Is it the wrong index.html????
-            // When launched from node it tries to locate localhost:3000/Simple.cxx
+            "pathMapping": {
+                "/": "${workspaceFolder}/build/Debug",
+                "file://${workspaceFolder}": "${workspaceFolder}"
+            },
+            "runtimeArgs": [
+                "--enable-experimental-webassembly-features",
+                "--allow-file-access-from-files",
+                "--remote-debugging-port=9222",
+                "--user-data-dir=${workspaceFolder}/.vscode/chrome-profile"
+            ]            
+        },
+	{
+            "name": "LaunchNodeServer + Chrome",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:3000/index.html",
+            "webRoot": "${workspaceFolder}/build/Debug",
+            "preLaunchTask": "StartNodeServer",
+            "postDebugTask": "StopNodeServer",
+            "sourceMaps": true,
+            "skipFiles": ["<node_internals>/**"],
             "pathMapping": {
                 "/": "${workspaceFolder}/build/Debug",
                 "file://${workspaceFolder}": "${workspaceFolder}"

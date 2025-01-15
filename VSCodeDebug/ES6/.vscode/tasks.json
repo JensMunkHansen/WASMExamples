@@ -10,6 +10,31 @@
             "options": {
                 "cwd": "${workspaceFolder}/build/Debug" // Set the working directory
             }            
+        },
+        {
+          "label": "StartNodeServer",
+          "type": "shell",
+          "command": "node",
+          "args": ["serverManager.cjs", "start"],
+          "problemMatcher": [],
+          "isBackground": true,
+          "presentation": {
+            "reveal": "always",
+            "panel": "shared"
+          },
+          "options": {
+            "cwd": "${workspaceFolder}"  // Ensure this points to the folder containing `serverManager.js`
+          }    
+        },
+        {
+            "label": "StopNodeServer",
+            "type": "shell",
+            "command": "node",
+            "args": ["serverManager.cjs", "stop"],
+            "problemMatcher": [],
+            "options": {
+               "cwd": "${workspaceFolder}"  // Ensure this points to the folder containing `serverManager.js`
+            }    
         }
     ]
 }
