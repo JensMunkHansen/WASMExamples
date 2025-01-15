@@ -15,7 +15,6 @@
             "cacheVariables": {
                 "ES6_OPTIMIZATION": "NONE",
                 "ES6_DEBUG": "SOURCE_MAPS"
-//                "ES6_DEBUG": "DEBUG_NATIVE"
             }
         }
     ],

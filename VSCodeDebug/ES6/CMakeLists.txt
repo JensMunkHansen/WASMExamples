@@ -4,6 +4,7 @@ project(ES6)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(spsEmscriptenSettings)
+include(spsEmscriptenDefaults)
 
 sps_set_emscripten_defaults(${PROJECT_NAME})
 

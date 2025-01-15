@@ -6,6 +6,13 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 project(EightQueens
   LANGUAGES C CXX)
 
+include(spsEmscriptenDefaults)
+
+if (NOT DEFINED WASMExamples_DEBUG)
+  # We anticipate all options are set
+  sps_set_emscripten_defaults(WASMExamples)
+endif()
+
 include(spsEmscriptenSettings)
 
 # Set C++ standard
@@ -20,8 +27,8 @@ if (EMSCRIPTEN)
     ENABLE_EXCEPTIONS ${ENABLE_EXCEPTIONS}
     SOURCE_FILES EightQueen.cxx
     TARGET_NAME ${TARGET_NAME}
-    DEBUG NONE
-    OPTIMIZATION BEST
+    DEBUG ${WASMExamples_DEBUG}
+    OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
 else()
   # Add the main executable
