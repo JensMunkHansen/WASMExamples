@@ -37,7 +37,7 @@ sps_emscripten_module(
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "side.c")
-
+message("CMAKE_CFG_INTDIR: ${CMAKE_CFG_INTDIR}")
 sps_emscripten_module(
   MAIN_MODULE
   VERBOSE
