@@ -5,11 +5,11 @@ include(CTest)
 enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
-inlucde(spsEmscriptenSettings)
-
+include(spsEmscriptenSettings)
+include(spsEmscriptenDefaults)
 sps_set_emscripten_defaults(${PROJECT_NAME})
 
 add_subdirectory(Embind/Template)
 #add_subdirectory(Share/ShareViaHost)
 add_subdirectory(Share/SharedHeap)
-
+add_subdirectory(ThreadCallback)

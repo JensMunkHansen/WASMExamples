@@ -3,5 +3,5 @@
 mkdir -p build_wasm
 cd build_wasm
 source ~/github/emsdk/emsdk_env.sh
-emcmake -S.. -B. -DCMAKE_BUILD_TYPE=Release
+emcmake cmake -S.. -B. -DCMAKE_BUILD_TYPE=Release
 make -j16

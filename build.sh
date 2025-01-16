@@ -20,7 +20,13 @@ cur_dir=$(pwd)
 # emcmake cmake --preset default
 # cmake --build build --preset Debug
 
-cd $cur_dir/ThreadCallback
-source build.sh
-cd $cur_dir/ThreadCallback/build
-ctest
+#cd $cur_dir/ThreadCallback
+#source build.sh
+#cd $cur_dir/ThreadCallback/build
+#ctest
+
+(
+    source "$HOME/github/emsdk/emsdk_env.sh"
+    bear -- emcmake cmake -S. -Bbuild -Bbuild -DVTK_DIR=/home/jmh/github/VTKCMake/install/lib/cmake/vtk
+    bear -- cmake --build build -v
+)

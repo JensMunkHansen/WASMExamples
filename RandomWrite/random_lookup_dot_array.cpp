@@ -7,7 +7,7 @@
 #include <vector>
 
 // Configuration
-constexpr size_t BUFFER_ALIGNMENT = 32;         // 32-byte alignment for SIMD
+constexpr size_t BUFFER_ALIGNMENT = 16;         // 32-byte alignment for SIMD
 constexpr size_t BUFFER_SIZE = 4 * 1024 * 1024; // Total buffer size in bytes
 constexpr size_t ELEMENT_SIZE = sizeof(std::array<float, 4>);
 constexpr size_t NUM_ELEMENTS = BUFFER_SIZE / ELEMENT_SIZE; // Number of elements

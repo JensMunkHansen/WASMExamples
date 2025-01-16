@@ -3,8 +3,13 @@ cmake_minimum_required(VERSION 3.22...3.28)
 project(ThreadCallback)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+include(spsEmscriptenDefaults)
+
+if (NOT DEFINED WASMExamples_DEBUG)
+  # We anticipate all options are set
+  sps_set_emscripten_defaults(WASMExamples)
+endif()
 include(spsEmscriptenSettings)
-sps_set_emscripten_defaults(${PROJECT_NAME})
 
 find_package(VTK
   COMPONENTS
