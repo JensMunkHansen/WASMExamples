@@ -35,6 +35,7 @@ set(node_and_javascript_files
 foreach(node_and_javascript_file ${node_and_javascript_files})
   add_custom_command(
     TARGET ${TARGET_TEST_NAME}
+    POST_BUILD
     COMMAND
       ${CMAKE_COMMAND} -E copy_if_different
         "${CMAKE_CURRENT_SOURCE_DIR}/${node_and_javascript_file}"
