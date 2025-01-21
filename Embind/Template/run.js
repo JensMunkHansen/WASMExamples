@@ -7,8 +7,6 @@ import { runInNewContext } from 'vm';
 // Import the function from wasmLoader.js
 import loadTemplateWasmModule from './main.js';
 
-
-
 console.log(loadTemplateWasmModule);
 
 // Define the options object
@@ -35,8 +33,6 @@ async function main() {
 	console.log(instance);
 	instance.Data = 3.0;
 	console.log(instance.Data);
-	console.log(instance.VectorData);
-
     } catch (error) {
         console.error("An error occurred:", error);
 	nErrors++;
