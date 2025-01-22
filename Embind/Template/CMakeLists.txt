@@ -27,6 +27,8 @@ sps_emscripten_module(
   ES6_MODULE ON
   SOURCE_FILES main.cpp
   JAVASCRIPT_FILES run.js
+  DEBUG ${WASMExamples_DEBUG}
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   EMBIND ON)
 
 target_compile_definitions(${TARGET_TEST_NAME} PRIVATE 
