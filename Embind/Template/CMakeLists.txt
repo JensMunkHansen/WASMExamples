@@ -29,6 +29,10 @@ sps_emscripten_module(
   JAVASCRIPT_FILES run.js
   EMBIND ON)
 
+target_compile_definitions(${TARGET_TEST_NAME} PRIVATE 
+    $<$<CONFIG:Asan>:__SANITIZE_ADDRESS__>)
+
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/template.html ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
 
 add_test(NAME TemplatedFunction_Call_NoExceptions

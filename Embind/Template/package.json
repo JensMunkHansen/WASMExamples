@@ -6,9 +6,10 @@
   },
   "name": "build",
   "version": "1.0.0",
-  "main": "run.js",
+  "main": "run_SmartPointerTest.js",
   "scripts": {
-    "test": "node run.js"
+      "smartpointer": "node run_SmartPointerTest.js",
+      "callback": "node run_CallbackTest.js"
   },
   "author": "",
   "license": "ISC",
