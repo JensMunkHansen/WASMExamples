@@ -15,7 +15,7 @@
             "cacheVariables": {
                 "WASMExamples_DEBUG": "SOURCE_MAPS",
                 "WASMExamples_OPTIMIZATION": "NONE",
-		"VTK_DIR": "$env{HOME}/tspkg/ArtifactoryInstall/Wasm32/Release/lib/cmake/vtk"
+                "VTK_DIR": "/home/jmh/github/VTKCMake/install/lib/cmake/vtk",
             }
         }
     ],
@@ -34,6 +34,11 @@
             "name": "Asan",
             "configurePreset": "default",
             "configuration": "Asan"
-        }
+        },
+        {
+            "name": "UBsan",
+            "configurePreset": "default",
+            "configuration": "UBsan"
+        }        
     ]
 }

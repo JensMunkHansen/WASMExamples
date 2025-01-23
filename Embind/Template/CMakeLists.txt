@@ -16,6 +16,8 @@ set(TARGET_TEST_NAME main)
 
 include(spsEmscriptenDefaults)
 include(spsAsan)
+include(spsUBSan)
+
 if (NOT DEFINED WASMExamples_DEBUG)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
@@ -30,10 +32,6 @@ sps_emscripten_module(
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   EMBIND ON)
-
-target_compile_definitions(${TARGET_TEST_NAME} PRIVATE 
-    $<$<CONFIG:Asan>:__SANITIZE_ADDRESS__>)
-
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/template.html ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
 

@@ -1,6 +1,12 @@
 #include "emscripten/bind.h"
 #include <iostream>
+#include <string>
 #include <vector>
+
+void process(std::string&& str)
+{
+  std::cout << "Processing: " << str << std::endl;
+}
 
 template <typename FloatType>
 class TemplateClass
@@ -16,6 +22,12 @@ public:
   void setData(FloatType x)
   {
     Data = x;
+
+    std::string s = "Hello, world!";
+
+    // Incorrect use of std::forward: s is not an rvalue, so this is UB
+    process(std::forward<std::string>(s));
+
 #ifdef __SANITIZE_ADDRESS__
     int* ptr = new int(42); // Dynamically allocate memory.
     delete ptr;             // Free the memory.
