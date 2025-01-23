@@ -3,11 +3,6 @@
 #include <string>
 #include <vector>
 
-void process(std::string&& str)
-{
-  std::cout << "Processing: " << str << std::endl;
-}
-
 template <typename FloatType>
 class TemplateClass
 {
@@ -23,16 +18,16 @@ public:
   {
     Data = x;
 
-    std::string s = "Hello, world!";
-
-    // Incorrect use of std::forward: s is not an rvalue, so this is UB
-    process(std::forward<std::string>(s));
-
 #ifdef __SANITIZE_ADDRESS__
     int* ptr = new int(42); // Dynamically allocate memory.
     delete ptr;             // Free the memory.
     // Use after free: Access the pointer after deleting it.
     std::cout << "Use after free value: " << *ptr << std::endl;
+#endif
+
+#ifdef __SANITIZE_UNDEFINED__
+    int max = std::numeric_limits<int>::max();
+    int result = max + 1; // Signed integer overflow: Undefined Behavior
 #endif
   }
   FloatType getData() const

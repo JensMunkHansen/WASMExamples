@@ -36,6 +36,9 @@ sps_emscripten_module(
 target_compile_definitions(${TARGET_TEST_NAME} PRIVATE
     $<$<CONFIG:Asan>:__SANITIZE_ADDRESS__=1>
 )
+target_compile_definitions(${TARGET_TEST_NAME} PRIVATE
+    $<$<CONFIG:UBsan>:__SANITIZE_UNDEFINED__=1>
+)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/template.html ${CMAKE_CURRENT_BINARY_DIR}/index.html @ONLY)
 
