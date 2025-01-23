@@ -15,7 +15,7 @@
             "cacheVariables": {
                 "WASMExamples_DEBUG": "SOURCE_MAPS",
                 "WASMExamples_OPTIMIZATION": "NONE",
-                "VTK_DIR": "/home/jmh/github/VTKCMake/install/lib/cmake/vtk",
+                "VTK_DIR": "/home/jmh/github/VTKCMake/install/lib/cmake/vtk"
             }
         }
     ],
