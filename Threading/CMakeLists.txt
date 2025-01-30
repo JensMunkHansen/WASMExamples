@@ -36,9 +36,17 @@ endif()
 include(GenerateExportHeader)
 
 # Configuration file for enabling/disabling threading
-#configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/config.h" @ONLY)
-configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
-
+if (CMAKE_CONFIGURATION_TYPES)
+  foreach(config ${CMAKE_CONFIGURATION_TYPES}) # Iterate over Debug, Release, etc.
+      string(TOUPPER ${config} CONFIG_UPPER)
+      set(CONFIG_FILE_PATH "${CMAKE_CURRENT_BINARY_DIR}/${config}/config.h")
+      
+      configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in"
+                     "${CONFIG_FILE_PATH}" @ONLY)
+  endforeach()
+else()
+  configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
+endif()
 add_library(${LIBRARY_NAME} STATIC "")
 
 generate_export_header(${LIBRARY_NAME})
@@ -56,7 +64,7 @@ target_sources(${LIBRARY_NAME}
 target_include_directories(${LIBRARY_NAME}
   PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
-    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>>)
 
 if (THREADING_ENABLED)
   target_link_libraries(${LIBRARY_NAME} PRIVATE Threads::Threads)
@@ -83,7 +91,13 @@ if (EMSCRIPTEN)
   )
   target_compile_options(${LIBRARY_PROXY_NAME} PRIVATE 
     -matomics 
-    -mbulk-memory)  
+    -mbulk-memory)
+  target_include_directories(${LIBRARY_PROXY_NAME}
+    PUBLIC
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>>)
+
+  
 else()
   add_executable(${TARGET_NAME} main.cxx)
   target_link_libraries(${TARGET_NAME} PRIVATE ${LIBRARY_NAME}) 
