@@ -4,14 +4,14 @@ cmake_minimum_required(VERSION 3.22...3.28)
 project(Catch2Test)
 
 option(BUILD_TESTING "Build testing" ON)
-option(THREADING_ENABLED "Threading enabled" ON)
+
+set(THREADING_ENABLED ON)
 set(_THREADING_ENABLED 1)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(spsEmscriptenDefaults)
 
 if (NOT DEFINED WASMExamples_DEBUG)
-#  message(FATAL_ERROR "We set the defaults")
   sps_set_emscripten_defaults(WASMExamples)
 endif()
 include(spsEmscriptenSettings)

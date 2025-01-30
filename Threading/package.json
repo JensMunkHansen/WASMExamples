@@ -1,11 +1,12 @@
 {
   "type": "module",
-  "name": "build",
+  "name": "release",
   "version": "1.0.0",
   "main": "run_Catch2Test.js",
   "scripts": {
-      "catch2test": "node run_Catch2Test.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [],
   "author": "",
   "license": "ISC",
   "description": ""

@@ -6,9 +6,11 @@ enable_testing()
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/CMake)
 include(spsAsan)
-include(spsEmscriptenSettings)
 include(spsEmscriptenDefaults)
-sps_set_emscripten_defaults(${PROJECT_NAME})
+if (NOT DEFINED WASMExamples_DEBUG)
+  sps_set_emscripten_defaults(${PROJECT_NAME})
+endif()
+include(spsEmscriptenSettings)
 
 add_subdirectory(Embind/Template)
 add_subdirectory(Threading)
