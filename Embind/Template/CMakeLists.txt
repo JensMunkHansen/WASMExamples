@@ -11,6 +11,10 @@ find_package(VTK
   COMPONENTS
   CommonCore
 )
+if (NOT VTK_FOUND)
+  message("VTK not found skipping")
+  return()
+endif()
 
 set(TARGET_TEST_NAME main)
 

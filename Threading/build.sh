@@ -23,5 +23,5 @@ elif [ "$platform" = "wasm" ]; then
     else
         emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=ON -DTHREADING_ENABLED=OFF -DCMAKE_FIND_ROOT_PATH=/home/jmh/github/Catch2CMake/install
     fi
-    cmake --build build_wasm -j 16
+    cmake --build build_wasm -j 16 -v
 fi

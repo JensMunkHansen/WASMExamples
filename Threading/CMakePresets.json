@@ -13,8 +13,9 @@
             "generator": "Ninja Multi-Config",
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
-                "WASMExamples_DEBUG": "READABLE_JS",
-                "WASMExamples_OPTIMIZATION": "BEST",
+                "BUILD_TESTING": "ON",
+                //"WASMExamples_DEBUG": "READABLE_JS",
+                //"WASMExamples_OPTIMIZATION": "BEST",
                 "Catch2_DIR": "$env{HOME}/github/Catch2CMake/install/lib/cmake/Catch2"
             }
         }

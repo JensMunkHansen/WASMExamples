@@ -11,6 +11,7 @@ include(spsEmscriptenDefaults)
 sps_set_emscripten_defaults(${PROJECT_NAME})
 
 add_subdirectory(Embind/Template)
+add_subdirectory(Threading)
 #add_subdirectory(Share/ShareViaHost)
 #add_subdirectory(Share/SharedHeap)
 #add_subdirectory(ThreadCallback)

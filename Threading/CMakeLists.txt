@@ -3,15 +3,18 @@ cmake_minimum_required(VERSION 3.22...3.28)
 
 project(Catch2Test)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
-include(EmscriptenSettings)
+option(BUILD_TESTING "Build testing" ON)
+option(THREADING_ENABLED "Threading enabled" ON)
+set(_THREADING_ENABLED 1)
 
-option(64_BIT OFF)
-option(THREADING_ENABLED OFF)
-set(_THREADING_ENABLED 0)
-if (THREADING_ENABLED)
-  set(_THREADING_ENABLED 1)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+include(spsEmscriptenDefaults)
+
+if (NOT DEFINED WASMExamples_DEBUG)
+#  message(FATAL_ERROR "We set the defaults")
+  sps_set_emscripten_defaults(WASMExamples)
 endif()
+include(spsEmscriptenSettings)
 
 set(TARGET_NAME main)
 set(LIBRARY_NAME library)
@@ -33,6 +36,7 @@ endif()
 include(GenerateExportHeader)
 
 # Configuration file for enabling/disabling threading
+#configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/config.h" @ONLY)
 configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 
 add_library(${LIBRARY_NAME} STATIC "")
@@ -54,11 +58,6 @@ target_include_directories(${LIBRARY_NAME}
     $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
     $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 
-# 64-bit
-if (64_BIT) 
-  target_compile_options(${LIBRARY_NAME} PRIVATE "-target=wasm64")
-endif()
-
 if (THREADING_ENABLED)
   target_link_libraries(${LIBRARY_NAME} PRIVATE Threads::Threads)
 
@@ -67,11 +66,8 @@ if (THREADING_ENABLED)
     -mbulk-memory)  
 endif()
 
-
-
 if (EMSCRIPTEN)
   sps_emscripten_module(
-    64_BIT ${64_BIT}
     ES6_MODULE ON
     VERBOSE
     THREADING_ENABLED ${THREADING_ENABLED}
@@ -81,9 +77,9 @@ if (EMSCRIPTEN)
     SOURCE_FILES dummy.cxx
     JAVASCRIPT_FILES "index.html;run_Catch2Test.js"
     EXPORT_NAME "loadCatch2TestModule"
-    OPTIMIZATION NONE
     LIBRARIES ${LIBRARY_NAME}
-    DEBUG PROFILE
+    OPTIMIZATION ${WASMExamples_TEST_OPTIMIZATION}
+    DEBUG ${WASMExamples_TEST_DEBUG}
   )
   target_compile_options(${LIBRARY_PROXY_NAME} PRIVATE 
     -matomics 
@@ -98,7 +94,7 @@ if (BUILD_TESTING)
     COMMAND
     npx node run_Catch2Test.js
     WORKING_DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR})
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 endif()
 
 if (BUILD_TESTING)
@@ -106,11 +102,12 @@ if (BUILD_TESTING)
     set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
     sps_emscripten_module(
       VERBOSE
-      64_BIT ${64_BIT}
       TARGET_NAME sampleTest
       SOURCE_FILES test.cxx
       LIBRARIES ${LIBRARY_NAME} Catch2::Catch2WithMain
       ES6_MODULE OFF
+      OPTIMIZATION ${WASMExamples_TEST_OPTIMIZATION}
+      DEBUG ${WASMExamples_TEST_DEBUG}
       THREADING_ENABLED ${THREADING_ENABLED})
   else()
     add_executable(sampleTest test.cxx)
