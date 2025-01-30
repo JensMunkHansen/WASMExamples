@@ -15,6 +15,7 @@ if (NOT DEFINED WASMExamples_DEBUG)
   sps_set_emscripten_defaults(WASMExamples)
 endif()
 include(spsEmscriptenSettings)
+include(spsConfig)
 
 set(TARGET_NAME main)
 set(LIBRARY_NAME library)
@@ -35,6 +36,9 @@ endif()
 
 include(GenerateExportHeader)
 
+add_library(${LIBRARY_NAME} STATIC "")
+
+if (0)
 # Configuration file for enabling/disabling threading
 if (CMAKE_CONFIGURATION_TYPES)
   foreach(config ${CMAKE_CONFIGURATION_TYPES}) # Iterate over Debug, Release, etc.
@@ -47,7 +51,10 @@ if (CMAKE_CONFIGURATION_TYPES)
 else()
   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 endif()
-add_library(${LIBRARY_NAME} STATIC "")
+else()
+  sps_config(${LIBRARY_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" @ONLY)
+endif()
+
 
 generate_export_header(${LIBRARY_NAME})
 
