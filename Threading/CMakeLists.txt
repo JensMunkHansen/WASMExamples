@@ -52,7 +52,7 @@ else()
   configure_file("${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" "${CMAKE_CURRENT_BINARY_DIR}/config.h" @ONLY)
 endif()
 else()
-  sps_config(${LIBRARY_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" @ONLY)
+  sps_configure_file(${LIBRARY_NAME} "${CMAKE_CURRENT_SOURCE_DIR}/config.h.in" config.h @ONLY)
 endif()
 
 
