@@ -4,7 +4,8 @@
   "version": "1.0.0",
   "main": "run.js",
   "scripts": {
-      "start": "node run.js"
+      "start": "node run.js",
+      "test": "npm run start"
   },
   "author": "",
   "license": "ISC",

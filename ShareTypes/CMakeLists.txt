@@ -1,46 +1,52 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(ShareTypes)
+project(ShareTypes
+  LANGUAGES CXX)
+
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 
 include(CTest)
 enable_testing()
 
 set(TARGET_TEST_NAME First)
-set(emscripten_optimization_flags -g3 -O0)
-set(emscripten_link_options)
-list(APPEND emscripten_link_options
-  "-lembind"
-  "-sMODULARIZE=1"
-  "-sEXPORT_ES6=1"
-  "-sASSERTIONS=1" # This makes linker assert stuff so we can see what is wrong
-  "-sERROR_ON_UNDEFINED_SYMBOLS=1"
-  "-sEXPORTED_FUNCTIONS=['_CreateStruct','_Produce','_Consume']"
-  "${emscripten_optimization_flags}")
 
-add_executable(${TARGET_TEST_NAME} Types.cxx First.cxx)
-target_include_directories(${TARGET_TEST_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_options(${TARGET_TEST_NAME} PUBLIC ${emscripten_link_options})
-target_link_options(${TARGET_TEST_NAME} PUBLIC "-s EXPORT_NAME=loadFirstModule")
-target_compile_options(${TARGET_TEST_NAME} PRIVATE ${emscripten_optimization_flags})
+include(spsEmscriptenDefaults)
+include(spsAsan)
+include(spsUBSan)
+
+if (NOT DEFINED WASMExamples_DEBUG)
+  # We anticipate all options are set
+  sps_set_emscripten_defaults(WASMExamples)
+endif()
+include(spsEmscriptenSettings)
+
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES run.js
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadFirstodule
+  EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
 set(TARGET_TEST_NAME Second)
-add_executable(${TARGET_TEST_NAME} Types.cxx First.cxx)
-target_include_directories(${TARGET_TEST_NAME} PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_options(${TARGET_TEST_NAME} PUBLIC ${emscripten_link_options})
-target_link_options(${TARGET_TEST_NAME} PUBLIC "-s EXPORT_NAME=loadSecondModule")
-target_compile_options(${TARGET_TEST_NAME} PRIVATE ${emscripten_optimization_flags})
 
-set(node_and_javascript_files
-  package.json
-  package-lock.json
-  run.js
-)
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES run.js
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadSecondModule
+  EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
-foreach(node_and_javascript_file ${node_and_javascript_files})
-  add_custom_command(
-    TARGET ${TARGET_TEST_NAME}
-    COMMAND
-      ${CMAKE_COMMAND} -E copy_if_different
-        "${CMAKE_CURRENT_SOURCE_DIR}/${node_and_javascript_file}"
-        $<TARGET_FILE_DIR:${TARGET_TEST_NAME}>)
-endforeach()
+add_test(NAME SharingCTypesDataSharingFails
+  COMMAND
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+    npm run test
+  WORKING_DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
+

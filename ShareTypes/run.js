@@ -14,8 +14,20 @@ async function main() {
         // Create an instance of the module object
 	const instance1 = wasmModule1._CreateStruct();
 	wasmModule1._Consume(instance1);
+        var i1 = wasmModule1._ConsumeTest(instance1);
+        if (i1 != 101) {
+            console.log("Module1 can see data from Module1");
+            console.log(`MyData.i: ${i1}`);
+        }
+        
 	// Doesn't share memory, but at least the types are known
 	wasmModule2._Consume(instance1);
+        var i2 = wasmModule2._ConsumeTest(instance1);
+        console.log(`MyData.i: ${i2}`);
+        if (i2 == 0) {
+            console.log("Module2 cannot see data from Module1");
+        }
+        
     } catch (error) {
 	nErrors = 1;
         console.error("An error occurred:", error);
