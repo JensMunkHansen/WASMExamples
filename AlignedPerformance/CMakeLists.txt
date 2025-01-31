@@ -42,12 +42,22 @@ if(EMSCRIPTEN)
 
   set(WASM_FILE "$<TARGET_FILE_DIR:random_lookup_dot_array>/$<TARGET_FILE_BASE_NAME:random_lookup_dot_array>.wasm")
 
-  add_custom_command(
-    TARGET random_lookup_dot_array POST_BUILD
-    COMMAND wasm-objdump -d ${WASM_FILE} > $<CONFIG>/random_lookup_dot_array.s
-    COMMENT "Generating assembly output (.s) for WebAssembly"
-  )
+  if (CMAKE_CONFIGURATION_TYPES)
+    add_custom_command(
+      TARGET random_lookup_dot_array POST_BUILD
+      COMMAND wasm-objdump -d ${WASM_FILE} > $<CONFIG>/random_lookup_dot_array.s
+      COMMENT "Generating assembly output (.s) for WebAssembly"
+    )
+  else()
+    add_custom_command(
+      TARGET random_lookup_dot_array POST_BUILD
+      COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_CURRENT_BINARY_DIR}/random_lookup_dot_array.s
+      COMMENT "Generating assembly output (.s) for WebAssembly"
+    )
+  endif()
 endif()
+
+
 
 
 if (0)

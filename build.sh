@@ -25,8 +25,15 @@ cur_dir=$(pwd)
 #cd $cur_dir/ThreadCallback/build
 #ctest
 
+catch2dir="$HOME/github/Catch2CMake/install/lib/cmake/Catch2"
+vtkdir="$HOME/github/VTKCMake/install/lib/cmake/vtk"
+if [[ ! -d "$catch2dir"  || ! -d "$vtkdir" ]]; then
+    echo "Directory does not exist."
+    exit 0
+fi
+
 (
     source "$HOME/github/emsdk/emsdk_env.sh"
-    bear -- emcmake cmake -S. -Bbuild -Bbuild -DVTK_DIR=/home/jmh/github/VTKCMake/install/lib/cmake/vtk
-    bear -- cmake --build build -v
+    bear -- emcmake cmake -S. -Bbuild -Bbuild -DVTK_DIR=$vtkdir -DCatch2_DIR=$catch2dir
+    bear -- cmake --build build -j 16
 )
