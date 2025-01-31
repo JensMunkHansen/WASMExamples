@@ -47,24 +47,28 @@ endif()
 include(CTest)
 
 # Generate the expected .wasm output filename
-set(WASM_FILE "${CMAKE_CURRENT_BINARY_DIR}/eight_queens.wasm")
+set(WASM_FILE "${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>/eight_queens.wasm")
 
 # Add a custom test that executes the main program
 add_test(
-    NAME EightQueensTest
-    COMMAND ${TARGET_NAME}
+  NAME EightQueensTest
+  COMMAND ${TARGET_NAME}
 )
-
 
 # Test to verify the .wasm file size
 add_test(
   NAME VerifyWasmSize
-  COMMAND ${CMAKE_COMMAND} -E env sh -c "[ $(stat -c%s ${WASM_FILE}) -lt 524288 ] || (echo 'File too large!' && exit 1)"
-  WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-)
+  COMMAND
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+    sh -c "[ $(stat -c%s ${WASM_FILE}) -lt 524288 ] || (echo 'File too large!' && exit 1)"
+  WORKING_DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
-# Custom target to run all tests
-add_custom_target(
+if (NOT ${PROJECT_NAME} STREQUAL WASMExamples)
+  # Custom target to run all tests
+  add_custom_target(
     check_wasm_size
     COMMAND ${CMAKE_CTEST_COMMAND} --output-on-failure
-)
+  )
+endif()

@@ -48,7 +48,9 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/template.html ${CMAKE_CURRENT_BINARY_
 
 add_test(NAME TemplatedFunction_Call_NoExceptions
   COMMAND
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
     npm run test
   WORKING_DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR})
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
       

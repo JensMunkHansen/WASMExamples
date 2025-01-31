@@ -7,7 +7,7 @@ include(spsEmscriptenDefaults)
 
 if (NOT DEFINED WASMExamples_DEBUG)
   # We anticipate all options are set
-  sps_set_emscripten_defaults(WASMExamples)
+  sps_set_emscripten_defaults(${PROJECT_NAME})
 endif()
 include(spsEmscriptenSettings)
 
@@ -62,10 +62,11 @@ sps_emscripten_module(
 
 add_test(NAME ThreadCallback_JSInvoke_NoErrors
   COMMAND
-  npx node run_JSCallbackTest.js
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+    npx node run_JSCallbackTest.js
   WORKING_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR})
-
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
 sps_emscripten_module(
   ES6_MODULE ON
@@ -78,7 +79,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES run_JSCallbackThreadDetachedTest.js
   INITIAL_MEMORY 1GB
   ASYNCIFY ON
-  SOURCE_FILES JSCallbackThreadDetached.cxx # JSCallbackThread.cxx (works)
+  SOURCE_FILES JSCallbackThreadDetached.cxx
   EMBIND ON
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
   DEBUG ${${PROJECT_NAME}_DEBUG}
@@ -86,13 +87,12 @@ sps_emscripten_module(
 
 add_test(NAME ThreadCallback_AsynDetached_NoErrors
   COMMAND
-  npx node run_JSCallbackThreadDetachedTest.js
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+    npx node run_JSCallbackThreadDetachedTest.js
   WORKING_DIRECTORY
-  ${CMAKE_CURRENT_BINARY_DIR})
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
-
-# Not working
-if (0)
 sps_emscripten_module(
   ES6_MODULE ON
   VERBOSE
@@ -107,12 +107,14 @@ sps_emscripten_module(
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
   DEBUG ${${PROJECT_NAME}_DEBUG}
 )
-endif()
 
-
-
-
-
+add_test(NAME ES6CallbackTest_NoErrors
+  COMMAND
+    ${CMAKE_COMMAND} -E env
+    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+    npx node run_ES6CallbackTest.js
+  WORKING_DIRECTORY
+    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 
 # Next Steps Now that the basic threading and callback mechanism is
 # working, you can expand this example:

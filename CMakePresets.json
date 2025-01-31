@@ -14,7 +14,8 @@
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
                 "BUILD_TESTING": "ON",
-                "Catch2_DIR": "$env{HOME}/github/Catch2CMake/install/lib/cmake/Catch2"
+                "Catch2_DIR": "$env{HOME}/github/Catch2CMake/install/lib/cmake/Catch2",
+                "VTK_DIR": "$env{HOME}/github/VTKCMake/install/lib/cmake/vtk"
             }
         }
     ],
