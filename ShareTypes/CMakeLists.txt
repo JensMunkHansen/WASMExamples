@@ -20,13 +20,14 @@ if (NOT DEFINED WASMExamples_DEBUG)
 endif()
 include(spsEmscriptenSettings)
 
+# Two modules with pure C interfaces
 sps_emscripten_module(
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES run.js
   DEBUG ${WASMExamples_DEBUG}
-  EXPORT_NAME loadFirstodule
+  EXPORT_NAME loadFirstModule
   EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
@@ -49,4 +50,30 @@ add_test(NAME SharingCTypesDataSharingFails
     npm run test
   WORKING_DIRECTORY
     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
+
+set(TARGET_TEST_NAME FirstCPP)
+  
+# Two modules with C++ interfaces
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES runcpp.js
+  EMBIND ON
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadFirstCPPModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
+set(TARGET_TEST_NAME SecondCPP)
+
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES runcpp.js
+  EMBIND ON
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadSecondCPPModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
 
