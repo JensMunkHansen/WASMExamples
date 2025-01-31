@@ -46,7 +46,7 @@ if(EMSCRIPTEN)
     TARGET random_lookup_dot_array POST_BUILD
     COMMAND wasm-objdump -d ${WASM_FILE} > $<CONFIG>/random_lookup_dot_array.s
     COMMENT "Generating assembly output (.s) for WebAssembly"
-  )  
+  )
 endif()
 
 
