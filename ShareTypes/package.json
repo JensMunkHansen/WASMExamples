@@ -2,10 +2,11 @@
   "type": "module",
   "name": "build",
   "version": "1.0.0",
-  "main": "run.js",
+  "main": "runc.js",
   "scripts": {
-      "start": "node run.js",
-      "test": "npm run start"
+      "runc": "node runc.js",
+      "runcpp": "node runcpp.js",
+      "test": "npm run runc && npm run runcpp"
   },
   "author": "",
   "license": "ISC",

@@ -25,7 +25,7 @@ sps_emscripten_module(
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
   SOURCE_FILES Types.cxx First.cxx
-  JAVASCRIPT_FILES run.js
+  JAVASCRIPT_FILES runc.js
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadFirstModule
   EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
@@ -37,7 +37,7 @@ sps_emscripten_module(
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
   SOURCE_FILES Types.cxx First.cxx
-  JAVASCRIPT_FILES run.js
+  JAVASCRIPT_FILES runc.js
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadSecondModule
   EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest

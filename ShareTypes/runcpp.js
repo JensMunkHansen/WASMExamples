@@ -14,10 +14,45 @@ async function main() {
 
         let obj = new wasmModule1.WrappedMyData(42, 3.14);
         console.log(obj.i);  // 42
-        console.log(obj.f); // 3.14
-        wasmModule1.ConsumeTestCPP(obj);
+        console.log(obj.f);  // 3.14
+        var i = wasmModule1.ConsumeTestCPP(obj);
+        if (i != 42) {
+            throw "wasmModule1 cannot read WrappedMyData.i";
+        }
+        try {
+            wasmModule2.ConsumeTestCPP(obj);
+        } catch (e) {
+            if (e.name !== "BindingError") {
+                console.log("We expect a BindindError: Expected a nullptr or WrappedMyData, but got a WrappedMyData");
+                nErrors++;
+            }
+        }
 
-        wasmModule2.ConsumeTestCPP(obj);
+// Retrieve the raw memory pointer
+        let ptr1 = obj.getPointer();  // Assume `getPointer()` returns the memory address
+        let structSize = 8; // Assuming 4 bytes for int + 4 bytes for float
+
+        // Read the raw memory from wasmModule1
+        let memory1 = new Uint8Array(wasmModule1.HEAPU8.buffer, ptr1, structSize);
+        let copiedData = new Uint8Array(structSize);
+        copiedData.set(memory1); // Copy the memory from WASM1 to a JS buffer
+
+        // Allocate a struct in wasmModule2
+        let obj2 = new wasmModule2.WrappedMyData(0, 0.0); // Create a new instance in wasm2
+        let ptr2 = obj2.getPointer();  // Get its memory address
+
+        // Copy data to wasmModule2's memory
+        let memory2 = new Uint8Array(wasmModule2.HEAPU8.buffer, ptr2, structSize);
+        memory2.set(copiedData); // Overwrite wasm2's memory
+
+        // Verify the copied values
+        console.log(`wasmModule2: obj2.i = ${obj2.i}, obj2.f = ${obj2.f}`);
+
+        // Check if the data was successfully transferred
+        if (obj2.i !== 42 || Math.abs(obj2.f - 3.14) > 0.001) {
+            throw "Memory copy failed!";
+        }
+
         
     } catch (error) {
 	nErrors = 1;
@@ -27,3 +62,5 @@ async function main() {
 
 // Execute the main function
 await main();
+
+process.exit(nErrors == 0 ? 0 : 1);

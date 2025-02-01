@@ -23,9 +23,10 @@ int ConsumeTest(MyData* data)
 
 #ifdef CPPTYPES
 
-void ConsumeTestCPP(struct WrappedMyData* data)
+int ConsumeTestCPP(struct WrappedMyData* data)
 {
   printf("WrappedMyData.i: %d\n", data->getInt());
+  return data->getInt();
 }
 
 // Embind bindings
