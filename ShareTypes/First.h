@@ -15,4 +15,8 @@ extern "C"
 }
 #endif
 
+#ifdef CPPTYPES
+void ConsumeTestCPP(struct WrappedMyData* data);
+#endif
+
 #endif

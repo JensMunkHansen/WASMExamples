@@ -60,6 +60,7 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES runcpp.js
   EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadFirstCPPModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
@@ -72,6 +73,7 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES runcpp.js
   EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadSecondCPPModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
