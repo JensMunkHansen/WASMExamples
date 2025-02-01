@@ -28,7 +28,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runc.js
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadFirstModule
-  EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
+  EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
 set(TARGET_TEST_NAME Second)
@@ -40,7 +40,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runc.js
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadSecondModule
-  EXPORTED_FUNCTIONS CreateStruct;Produce;Consume;ConsumeTest
+  EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
 add_test(NAME SharingCTypesDataSharingFails

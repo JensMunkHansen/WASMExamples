@@ -3,12 +3,16 @@
 #include "Types.h"
 #include "stdlib.h"
 
-MyData* CreateStruct()
+MyData* CreateStruct(int _i, float _f)
 {
   MyData* p = (MyData*)malloc(sizeof(MyData));
-  p->f = 0.0f;
-  p->i = 101;
+  p->i = _f;
+  p->f = _f;
   return p;
+}
+void DestroyStruct(MyData* s)
+{
+  free(s);
 }
 
 #ifdef CPPTYPES

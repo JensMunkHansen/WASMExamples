@@ -27,6 +27,7 @@ async function main() {
         if (i2 == 0) {
             console.log("Module2 cannot see data from Module1");
         }
+        wasmModule1._DestroyStruct(instance1);
         
     } catch (error) {
 	nErrors = 1;

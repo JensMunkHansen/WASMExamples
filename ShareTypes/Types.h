@@ -8,11 +8,11 @@ extern "C"
 
   typedef struct MyData
   {
-    float f;
     int i;
+    float f;
   } MyData;
-  MyData* CreateStruct();
-
+  MyData* CreateStruct(int _i, float _f);
+  void DestroyStruct(MyData* s);
 #ifdef __cplusplus
 }
 #endif
