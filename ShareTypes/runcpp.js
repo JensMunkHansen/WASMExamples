@@ -28,7 +28,7 @@ async function main() {
             }
         }
 
-// Retrieve the raw memory pointer
+        // Retrieve the raw memory pointer
         let ptr1 = obj.getPointer();  // Assume `getPointer()` returns the memory address
         let structSize = 8; // Assuming 4 bytes for int + 4 bytes for float
 
