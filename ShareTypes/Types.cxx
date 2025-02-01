@@ -1,18 +1,25 @@
 #include <emscripten/bind.h>
 
 #include "Types.h"
+#include "stdio.h"
 #include "stdlib.h"
+#include <cstdint>
 
 MyData* CreateStruct(int _i, float _f)
 {
   MyData* p = (MyData*)malloc(sizeof(MyData));
-  p->i = _f;
+  p->i = _i;
   p->f = _f;
   return p;
 }
 void DestroyStruct(MyData* s)
 {
-  free(s);
+  if (s)
+  {
+    printf("Freeing struct at address: %0zx\n", reinterpret_cast<uintptr_t>(s));
+    free(s);
+    s = nullptr;
+  }
 }
 
 #ifdef CPPTYPES

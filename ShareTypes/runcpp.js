@@ -13,8 +13,7 @@ async function main() {
 	const wasmModule2 = await loadModule('./SecondCPP.js', 'loadSecondCPPModule');
 
         let obj = new wasmModule1.WrappedMyData(42, 3.14);
-        console.log(obj.i);  // 42
-        console.log(obj.f);  // 3.14
+        console.log("obj.i: ${obj.i} obj.f: ${obj.f}");
         var i = wasmModule1.ConsumeTestCPP(obj);
         if (i != 42) {
             throw "wasmModule1 cannot read WrappedMyData.i";
@@ -26,13 +25,13 @@ async function main() {
                 console.log("We expect a BindindError: Expected a nullptr or WrappedMyData, but got a WrappedMyData");
                 nErrors++;
             }
+            console.log("wasmModule2 cannot understand type WrappedMyData");
         }
 
+        // Dmytro: Serialization
 
-
-        // Dmytro
-
-
+        // Reference values
+        console.log(`wasmModule1: obj.i = ${obj.i}, obj.f = ${obj.f}`);
         
         // Retrieve the raw memory pointer
         let ptr1 = obj.getPointer();  // Assume `getPointer()` returns the memory address
@@ -40,6 +39,7 @@ async function main() {
 
         // Read the raw memory from wasmModule1
         let memory1 = new Uint8Array(wasmModule1.HEAPU8.buffer, ptr1, structSize);
+        // Allocate host memory
         let copiedData = new Uint8Array(structSize);
         copiedData.set(memory1); // Copy the memory from WASM1 to a JS buffer
 
@@ -55,7 +55,7 @@ async function main() {
         console.log(`wasmModule2: obj2.i = ${obj2.i}, obj2.f = ${obj2.f}`);
 
         // Check if the data was successfully transferred
-        if (obj2.i !== 42 || Math.abs(obj2.f - 3.14) > 0.001) {
+        if (obj2.i !== obj.i || Math.abs(obj2.f - obj.f) > 0.001) {
             throw "Memory copy failed!";
         }
 
