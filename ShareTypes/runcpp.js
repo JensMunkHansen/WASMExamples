@@ -58,8 +58,6 @@ async function main() {
         if (obj2.i !== obj.i || Math.abs(obj2.f - obj.f) > 0.001) {
             throw "Memory copy failed!";
         }
-
-        
     } catch (error) {
 	nErrors = 1;
         console.error("An error occurred:", error);
