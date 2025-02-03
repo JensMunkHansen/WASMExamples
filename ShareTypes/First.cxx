@@ -69,20 +69,3 @@ EMSCRIPTEN_BINDINGS(consume)
 }
 
 #endif
-
-#include <emscripten.h>
-
-extern "C"
-{
-  int globalVar = 200; // Force alignment to 0x2000
-
-  int EMSCRIPTEN_KEEPALIVE getGlobalVar()
-  {
-    return globalVar;
-  }
-
-  void EMSCRIPTEN_KEEPALIVE setGlobalVar(int value)
-  {
-    globalVar = value;
-  }
-}
