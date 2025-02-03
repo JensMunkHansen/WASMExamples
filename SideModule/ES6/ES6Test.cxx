@@ -14,7 +14,7 @@ int AddOne(int k)
 
   // Memory has to be owned by main module to be shared
   struct MyStruct input;
-  // Calling function in a shared library
+  // Calling function in a shared library (setting variable to 2)
   SetValue(&input);
   std::cout << "Main module: After calling SetValue: " << input.a << std::endl;
 

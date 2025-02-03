@@ -15,7 +15,6 @@ if(${WASM64} STREQUAL "ON")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --target=wasm64")
 endif()
 
-if (USE_NEW)
 
 include(spsEmscriptenDefaults)
 
@@ -24,6 +23,9 @@ if (NOT DEFINED WASMExamples_DEBUG)
   sps_set_emscripten_defaults(WASMExamples)
 endif()
 include(spsEmscriptenSettings)
+
+if (USE_NEW)
+
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -47,6 +49,7 @@ if(EMSCRIPTEN)
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
   sps_emscripten_module(
+    VERBOSE
     64_BIT ${WASM64}
     ES6_MODULE OFF
     TARGET_NAME random_lookup_dot_array
@@ -108,6 +111,8 @@ if(EMSCRIPTEN)
     set_target_properties(random_lookup_dot_array PROPERTIES OUTPUT_NAME "random_lookup_dot_array")
     set_target_properties(random_lookup_dot_array PROPERTIES LINK_FLAGS "--bind")
 
+    _sps_target_info(random_lookup_dot_array)
+    
     set(WASM_FILE "$<TARGET_FILE_DIR:random_lookup_dot_array>/$<TARGET_FILE_BASE_NAME:random_lookup_dot_array>.wasm")
 
     if (NOT WASM64)
