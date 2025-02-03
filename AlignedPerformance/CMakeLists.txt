@@ -17,6 +17,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(WASM64 "64-bit WASM" OFF)
 option(SIMD OFF)
 
+if (CMAKE_CXX_COMPILER_LAUNCHER)
+  message(STATUS "Compiler launcher detected: ${CMAKE_CXX_COMPILER_LAUNCHER}")
+endif()
+  
 if(EMSCRIPTEN)
   sps_emscripten_module(
     ES6_MODULE OFF
