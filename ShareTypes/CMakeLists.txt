@@ -89,9 +89,10 @@ sps_emscripten_module(
   THREADING_ENABLED ON
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadFirstCPPModule
+  DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/First.ld")
 
 set(TARGET_TEST_NAME SecondSharedCPP)
 
@@ -103,8 +104,9 @@ sps_emscripten_module(
   THREADING_ENABLED ON
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadSecondCPPModule
+  DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/Second.ld")
 
 

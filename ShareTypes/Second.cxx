@@ -26,6 +26,27 @@ int ConsumeTest(MyData* data)
 
 #ifdef CPPTYPES
 
+extern "C"
+{
+  //  __attribute__((used, section(".my_global"))) int TrueStaticVariable = 200; // Same name
+  __attribute__((used, aligned(0x2000))) int TrueStaticVariable = 200;
+  int EMSCRIPTEN_KEEPALIVE getTrueStaticValue()
+  {
+    return TrueStaticVariable;
+  }
+}
+
+int getGlobalStaticValue()
+{
+  return SomeStaticVariable;
+}
+
+// Setter function
+void setGlobalStaticValue(int value)
+{
+  SomeStaticVariable = value;
+}
+
 int ConsumeTestCPP(struct WrappedMyData* data)
 {
   printf("This is defined in second wasmModule\n");
@@ -40,5 +61,6 @@ EMSCRIPTEN_BINDINGS(consume)
   emscripten::function("ConsumeTestCPP", &ConsumeTestCPP, emscripten::allow_raw_pointers());
   emscripten::function("getGlobalStaticValue", &getGlobalStaticValue);
   emscripten::function("setGlobalStaticValue", &setGlobalStaticValue);
+  emscripten::function("getTrueStaticValue", &getTrueStaticValue);
 }
 #endif

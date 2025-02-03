@@ -58,9 +58,12 @@ async function main() {
         console.log(wasmModule1.getGlobalStaticValue());
         console.log(wasmModule2.getGlobalStaticValue());
 
+        // Calling the wrong function
         wasmModule1.ConsumeTestCPP(obj);
         wasmModule2.ConsumeTestCPP(obj2);
-        
+
+        console.log(wasmModule1.getTrueStaticValue());
+        console.log(wasmModule2.getTrueStaticValue());
 
     } catch (error) {
         nErrors = 1;
@@ -72,3 +75,5 @@ async function main() {
 await main();
 
 process.exit(nErrors === 0 ? 0 : 1);
+
+

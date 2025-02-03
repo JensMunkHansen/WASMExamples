@@ -26,22 +26,29 @@ int ConsumeTest(MyData* data)
 
 #ifdef CPPTYPES
 
-/*
-  To avoid sharing static content, one can write a linker script module1.ld and
-  append this linker argument '-Wl,-T,module1.ld'. The script contains
+// Nasty, explicit define offset
+extern "C"
+{
+  //__attribute__((used, section(".my_global"))) int TrueStaticVariable = 100; // Same name
+  __attribute__((used, aligned(0x1000))) int TrueStaticVariable = 100;
 
-SECTIONS {
-    .mydata1 0x2000 : {
-        KEEP(*(.my_global)) //
-    }
+  int EMSCRIPTEN_KEEPALIVE getTrueStaticValue()
+  {
+    return TrueStaticVariable;
+  }
 }
 
-and the static variable should be defined with an attribute
+// This is really bad practice!!!
+int getGlobalStaticValue()
+{
+  return SomeStaticVariable;
+}
 
-__attribute__((used, section(".mydata1")))
-int globalVar = 100;  // Placed in .mydata1
-
-*/
+// Setter function
+void setGlobalStaticValue(int value)
+{
+  SomeStaticVariable = value;
+}
 
 int ConsumeTestCPP(struct WrappedMyData* data)
 {
@@ -58,6 +65,24 @@ EMSCRIPTEN_BINDINGS(consume)
 
   emscripten::function("getGlobalStaticValue", &getGlobalStaticValue);
   emscripten::function("setGlobalStaticValue", &setGlobalStaticValue);
+  emscripten::function("getTrueStaticValue", &getTrueStaticValue);
 }
 
 #endif
+
+#include <emscripten.h>
+
+extern "C"
+{
+  int globalVar = 200; // Force alignment to 0x2000
+
+  int EMSCRIPTEN_KEEPALIVE getGlobalVar()
+  {
+    return globalVar;
+  }
+
+  void EMSCRIPTEN_KEEPALIVE setGlobalVar(int value)
+  {
+    globalVar = value;
+  }
+}

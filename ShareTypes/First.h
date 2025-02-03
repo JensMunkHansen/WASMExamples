@@ -2,6 +2,7 @@
 #define first_h
 
 #include "Types.h"
+#include <emscripten.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -17,20 +18,15 @@ extern "C"
 
 #ifdef CPPTYPES
 int ConsumeTestCPP(struct WrappedMyData* data);
-#endif
 
+// Dangerous
 extern int SomeStaticVariable;
 
 // This is really bad practice!!!
-int getGlobalStaticValue()
-{
-  return SomeStaticVariable;
-}
+int getGlobalStaticValue();
 
 // Setter function
-void setGlobalStaticValue(int value)
-{
-  SomeStaticVariable = value;
-}
+void setGlobalStaticValue(int value);
+#endif
 
 #endif
