@@ -15,8 +15,8 @@ async function main() {
         });
 
         // Load both WASM modules with the shared memory
-        const wasmModule1 = await loadModule('./FirstSharedCPP.js', sharedMemory);
         const wasmModule2 = await loadModule('./SecondSharedCPP.js', sharedMemory);
+        const wasmModule1 = await loadModule('./FirstSharedCPP.js', sharedMemory);
 
         // Create an object in wasmModule1
         let obj = new wasmModule1.WrappedMyData(42, 3.14);
