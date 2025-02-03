@@ -1,0 +1,2 @@
+emcc fill_array.cpp -o fill_array.js -s MODULARIZE=1 -s EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" -s EXPORTED_FUNCTIONS="['_fill_array']" -s EXPORT_NAME="FILL_ARRAY_MODULE" -s IMPORTED_MEMORY=1 -s ALLOW_MEMORY_GROWTH=1
+emcc calc_sum.cpp -o calc_sum.js -s MODULARIZE=1 -s EXPORTED_RUNTIME_METHODS="['ccall', 'cwrap']" -s EXPORTED_FUNCTIONS="['_calc_sum']" -s EXPORT_NAME="CALC_SUM_MODULE" -s IMPORTED_MEMORY=1 -s ALLOW_MEMORY_GROWTH=1
