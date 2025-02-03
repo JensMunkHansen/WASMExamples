@@ -12,6 +12,6 @@ if [ "$platform" = "linux" ]; then
     bear -- bash -c "cmake --build build -j 16"
 elif [ "$platform" = "wasm" ]; then
     source "$HOME/github/emsdk/emsdk_env.sh"
-    emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release -DSIMD=OFF
-    cmake --build build_wasm -j 16
+    emcmake cmake -S. -Bbuild_wasm -DCMAKE_BUILD_TYPE=Release -DSIMD=OFF -DWASM64=ON
+    cmake --build build_wasm -j 16 -v
 fi

@@ -3,6 +3,20 @@ cmake_minimum_required(VERSION 3.22...3.28)
 project(AlignedPerformance)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+
+# TODO: Fix generic build system
+set(USE_NEW FALSE)
+
+option(WASM64 "64-bit WASM" OFF)
+option(SIMD OFF)
+
+# TODO: Do this on target instead
+if(${WASM64} STREQUAL "ON")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --target=wasm64")
+endif()
+
+if (USE_NEW)
+
 include(spsEmscriptenDefaults)
 
 if (NOT DEFINED WASMExamples_DEBUG)
@@ -14,15 +28,10 @@ include(spsEmscriptenSettings)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-option(WASM64 "64-bit WASM" OFF)
-option(SIMD OFF)
 
-if (CMAKE_CXX_COMPILER_LAUNCHER)
-  message(STATUS "Compiler launcher detected: ${CMAKE_CXX_COMPILER_LAUNCHER}")
-endif()
-  
 if(EMSCRIPTEN)
   sps_emscripten_module(
+    64_BIT ${WASM64}
     ES6_MODULE OFF
     TARGET_NAME random_rw
     SOURCE_FILES random_rw.cpp
@@ -30,6 +39,7 @@ if(EMSCRIPTEN)
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
   sps_emscripten_module(
+    64_BIT ${WASM64}
     ES6_MODULE OFF
     TARGET_NAME random_lookup_dot
     SOURCE_FILES random_lookup_dot.cpp
@@ -37,6 +47,7 @@ if(EMSCRIPTEN)
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
   sps_emscripten_module(
+    64_BIT ${WASM64}
     ES6_MODULE OFF
     TARGET_NAME random_lookup_dot_array
     SOURCE_FILES random_lookup_dot_array.cpp
@@ -46,25 +57,28 @@ if(EMSCRIPTEN)
 
   set(WASM_FILE "$<TARGET_FILE_DIR:random_lookup_dot_array>/$<TARGET_FILE_BASE_NAME:random_lookup_dot_array>.wasm")
 
-  if (CMAKE_CONFIGURATION_TYPES)
-    add_custom_command(
-      TARGET random_lookup_dot_array POST_BUILD
-      COMMAND wasm-objdump -d ${WASM_FILE} > $<CONFIG>/random_lookup_dot_array.s
-      COMMENT "Generating assembly output (.s) for WebAssembly"
-    )
-  else()
-    add_custom_command(
-      TARGET random_lookup_dot_array POST_BUILD
-      COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_CURRENT_BINARY_DIR}/random_lookup_dot_array.s
-      COMMENT "Generating assembly output (.s) for WebAssembly"
-    )
+  if (NOT WASM64)
+    if (CMAKE_CONFIGURATION_TYPES)
+      add_custom_command(
+        TARGET random_lookup_dot_array POST_BUILD
+        COMMAND wasm-objdump -d ${WASM_FILE} > $<CONFIG>/random_lookup_dot_array.s
+        COMMENT "Generating assembly output (.s) for WebAssembly"
+      )
+    else()
+      add_custom_command(
+        TARGET random_lookup_dot_array POST_BUILD
+        COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_CURRENT_BINARY_DIR}/random_lookup_dot_array.s
+        COMMENT "Generating assembly output (.s) for WebAssembly"
+      )
+    endif()
   endif()
 endif()
 
 
 
 
-if (0)
+else()
+  
   # Old project ejecting assembly
 if(EMSCRIPTEN)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
@@ -95,12 +109,14 @@ if(EMSCRIPTEN)
     set_target_properties(random_lookup_dot_array PROPERTIES LINK_FLAGS "--bind")
 
     set(WASM_FILE "$<TARGET_FILE_DIR:random_lookup_dot_array>/$<TARGET_FILE_BASE_NAME:random_lookup_dot_array>.wasm")
-    
-    add_custom_command(
-      TARGET random_lookup_dot_array POST_BUILD
-      COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_BINARY_DIR}/random_lookup_dot_array.s
-      COMMENT "Generating assembly output (.s) for WebAssembly"
-    )    
+
+    if (NOT WASM64)
+      add_custom_command(
+        TARGET random_lookup_dot_array POST_BUILD
+        COMMAND wasm-objdump -d ${WASM_FILE} > ${CMAKE_BINARY_DIR}/random_lookup_dot_array.s
+        COMMENT "Generating assembly output (.s) for WebAssembly"
+      )
+    endif()
 else()
   # Custom target to generate assembly
   add_custom_target(assembly
