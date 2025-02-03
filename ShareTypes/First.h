@@ -19,4 +19,18 @@ extern "C"
 int ConsumeTestCPP(struct WrappedMyData* data);
 #endif
 
+extern int SomeStaticVariable;
+
+// This is really bad practice!!!
+int getGlobalStaticValue()
+{
+  return SomeStaticVariable;
+}
+
+// Setter function
+void setGlobalStaticValue(int value)
+{
+  SomeStaticVariable = value;
+}
+
 #endif

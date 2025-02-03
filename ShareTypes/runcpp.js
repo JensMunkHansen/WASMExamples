@@ -22,10 +22,12 @@ async function main() {
             wasmModule2.ConsumeTestCPP(obj);
         } catch (e) {
             if (e.name !== "BindingError") {
-                console.log("We expect a BindindError: Expected a nullptr or WrappedMyData, but got a WrappedMyData");
+                console.log(e.error());
+                console.log("We expected a BindindError");
                 nErrors++;
             }
-            console.log("wasmModule2 cannot understand type WrappedMyData");
+            console.log("We expect this error: " + e.name);
+            console.log("wasmModule2 cannot understand type WrappedMyData from wasmModule1");
         }
 
         // Dmytro: Serialization

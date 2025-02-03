@@ -3,7 +3,8 @@
 #include "stdio.h"
 #include <emscripten/bind.h>
 
-int SomeStaticVariable = 1;
+// Same true for class variables!!! Dangerous
+int SomeStaticVariable = 2;
 
 MyData Produce()
 {
@@ -36,9 +37,7 @@ EMSCRIPTEN_BINDINGS(consume)
 {
   // Bind ConsumeTest and allow raw pointers
   emscripten::function("ConsumeTestCPP", &ConsumeTestCPP, emscripten::allow_raw_pointers());
-
   emscripten::function("getGlobalStaticValue", &getGlobalStaticValue);
   emscripten::function("setGlobalStaticValue", &setGlobalStaticValue);
 }
-
 #endif

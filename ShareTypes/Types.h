@@ -18,6 +18,7 @@ extern "C"
 #endif
 
 #ifdef CPPTYPES
+#include <cstdint>
 struct WrappedMyData
 {
   MyData data;
@@ -33,6 +34,9 @@ struct WrappedMyData
 
   float getFloat() const { return data.f; }
   void setFloat(float value) { data.f = value; }
+
+  // Static method for creating object from pointer
+  static WrappedMyData* fromPointer(uintptr_t ptr);
 };
 #endif
 

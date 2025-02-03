@@ -36,7 +36,7 @@ set(TARGET_TEST_NAME Second)
 sps_emscripten_module(
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
-  SOURCE_FILES Types.cxx First.cxx
+  SOURCE_FILES Types.cxx Second.cxx
   JAVASCRIPT_FILES runc.js
   DEBUG ${WASMExamples_DEBUG}
   EXPORT_NAME loadSecondModule
@@ -70,8 +70,37 @@ set(TARGET_TEST_NAME SecondCPP)
 sps_emscripten_module(
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
-  SOURCE_FILES Types.cxx First.cxx
+  SOURCE_FILES Types.cxx Second.cxx
   JAVASCRIPT_FILES runcpp.js
+  EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadSecondCPPModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
+set(TARGET_TEST_NAME FirstSharedCPP)
+
+# Two modules with C++ interfaces (shared memory)
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES runshared.js
+  THREADING_ENABLED ON
+  EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadFirstCPPModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
+set(TARGET_TEST_NAME SecondSharedCPP)
+
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx Second.cxx
+  JAVASCRIPT_FILES runshared.js
+  THREADING_ENABLED ON
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   DEBUG ${WASMExamples_DEBUG}
