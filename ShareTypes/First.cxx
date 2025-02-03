@@ -27,6 +27,7 @@ int ConsumeTest(MyData* data)
 
 int ConsumeTestCPP(struct WrappedMyData* data)
 {
+  printf("This is defined in first wasmModule\n");
   printf("WrappedMyData.i: %d\n", data->getInt());
   return data->getInt();
 }

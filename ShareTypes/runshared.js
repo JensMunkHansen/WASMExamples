@@ -57,6 +57,9 @@ async function main() {
         // Dangerous using shared memory (dangerous they share static content)
         console.log(wasmModule1.getGlobalStaticValue());
         console.log(wasmModule2.getGlobalStaticValue());
+
+        wasmModule1.ConsumeTestCPP(obj);
+        wasmModule2.ConsumeTestCPP(obj2);
         
 
     } catch (error) {
