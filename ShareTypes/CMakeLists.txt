@@ -112,3 +112,33 @@ sps_emscripten_module(
 #target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/Second.ld")
 
 
+set(TARGET_TEST_NAME FirstShared)
+  
+# Two modules with C++ interfaces
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES runshared.js
+  EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadFirstSharedModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
+set(TARGET_TEST_NAME SecondShared)
+
+sps_emscripten_module(
+  TARGET_NAME ${TARGET_TEST_NAME}
+  ES6_MODULE ON
+  SOURCE_FILES Types.cxx First.cxx
+  JAVASCRIPT_FILES runshared.js
+  EMBIND ON
+  COMPILE_DEFINITIONS CPPTYPES
+  DEBUG ${WASMExamples_DEBUG}
+  EXPORT_NAME loadSecondSharedModule
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION})
+
+
+
+

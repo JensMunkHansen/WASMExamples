@@ -7,7 +7,6 @@ void Process(struct VectorView* vectorView)
   // Simulate updates to the VectorView to trigger the callback
   int nComponents;
   int nTuples;
-
   // Change the dimensions
   SetNumberOfTuples(vectorView, 20);
 

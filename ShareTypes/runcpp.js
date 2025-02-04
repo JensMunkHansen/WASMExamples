@@ -41,7 +41,8 @@ async function main() {
         let memory1 = new Uint8Array(wasmModule1.HEAPU8.buffer, ptr1, structSize);
         // Allocate host memory
         let copiedData = new Uint8Array(structSize);
-        copiedData.set(memory1); // Copy the memory from WASM1 to a JS buffer
+	// Copy the memory from WASM1 to a JS buffer
+        copiedData.set(memory1); 
 
         // Allocate a struct in wasmModule2
         let obj2 = new wasmModule2.WrappedMyData(0, 0.0); // Create a new instance in wasm2
