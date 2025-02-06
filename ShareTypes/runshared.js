@@ -13,11 +13,15 @@ async function main() {
             maximum: 256,  // Keep the max same
             shared: true   // Enables shared memory
         });
-
         // Load both WASM modules with the shared memory
         const wasmModule2 = await loadModule('./SecondSharedCPP.js', sharedMemory);
         const wasmModule1 = await loadModule('./FirstSharedCPP.js', sharedMemory);
 
+        const getMemoryStart1 = wasmModule1.cwrap('getMemoryStartFirst', 'number', []);
+        const getMemoryStart2 = wasmModule2.cwrap('getMemoryStartSecond', 'number', []);
+        console.log("First memory address:", getMemoryStart1());
+        console.log("Second memory address:", getMemoryStart2());
+        
         // Create an object in wasmModule1
         let obj = new wasmModule1.WrappedMyData(42, 3.14);
         console.log(`wasmModule1: obj.i = ${obj.i}, obj.f = ${obj.f}`);

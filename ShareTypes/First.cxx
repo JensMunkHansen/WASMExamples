@@ -6,6 +6,15 @@
 
 int SomeStaticVariable = 1;
 
+extern "C"
+{
+  // Function to return a pointer to the start of memory
+  uint32_t* getMemoryStartFirst()
+  {
+    return (uint32_t*)0; // Memory starts at 0x0 in linear memory
+  }
+}
+
 MyData Produce()
 {
   MyData data;

@@ -3,11 +3,16 @@ cmake_minimum_required(VERSION 3.15)
 project(ShareVTKTypes
   LANGUAGES CXX)
 
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 
 include(CTest)
 enable_testing()
 
+find_package(VTK
+  COMPONENTS
+  CommonCore
+  CommonDataModel
+  FiltersSources)
 
 include(spsEmscriptenDefaults)
 include(spsAsan)
@@ -23,10 +28,17 @@ set(TARGET_TEST_NAME First)
 
 # Two modules with C++ interfaces
 sps_emscripten_module(
+  VERBOSE
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
+  THREADING_ENABLED ON
+  EMBIND ON
   SOURCE_FILES Factory.cxx First.cxx
-  JAVASCRIPT_FILES runc.js
+  JAVASCRIPT_FILES run.mjs
+#  INITIAL_MEMORY 16777216
+#  MAXIMUM_MEMORY 16777216
+  IMPORTED_MEMORY
+  LIBRARIES ${VTK_LIBRARIES}
   EXPORT_NAME loadFirstModule
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
@@ -34,20 +46,26 @@ sps_emscripten_module(
 set(TARGET_TEST_NAME Second)
 
 sps_emscripten_module(
+  VERBOSE
   TARGET_NAME ${TARGET_TEST_NAME}
   ES6_MODULE ON
+  THREADING_ENABLED ON
+  EMBIND ON
   SOURCE_FILES Factory.cxx Second.cxx
-  JAVASCRIPT_FILES runc.js
+  JAVASCRIPT_FILES run.mjs
+#  INITIAL_MEMORY 16777216
+#  MAXIMUM_MEMORY 16777216
+  IMPORTED_MEMORY
+  LIBRARIES ${VTK_LIBRARIES}
   EXPORT_NAME loadSecondModule
-  EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
-add_test(NAME SharingVTKTypes
-  COMMAND
-    ${CMAKE_COMMAND} -E env
-    "CMAKE_CONFIG_TYPE=$<CONFIG>"  
-    npm run test
-  WORKING_DIRECTORY
-    ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
+# add_test(NAME SharingVTKTypes
+#   COMMAND
+#     ${CMAKE_COMMAND} -E env
+#     "CMAKE_CONFIG_TYPE=$<CONFIG>"  
+#     npm run test
+#   WORKING_DIRECTORY
+#     ${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>)
 

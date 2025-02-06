@@ -87,10 +87,12 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES runshared.js
   THREADING_ENABLED ON
+  IMPORTED_MEMORY
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadFirstCPPModule
   DEBUG ${WASMExamples_DEBUG}
+  EXPORTED_FUNCTIONS getMemoryStartFirst
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 # Specify linker file (not honored in WASM yet)
 #target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/First.ld")
@@ -103,10 +105,12 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx Second.cxx
   JAVASCRIPT_FILES runshared.js
   THREADING_ENABLED ON
+  IMPORTED_MEMORY
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadSecondCPPModule
   DEBUG ${WASMExamples_DEBUG}
+  EXPORTED_FUNCTIONS getMemoryStartSecond
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 # Specify linker file (not honored in WASM yet)
 #target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/Second.ld")

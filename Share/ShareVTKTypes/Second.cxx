@@ -7,7 +7,7 @@
 
 void SecondModule::Consume(vtkPolyData* polyData)
 {
-  printf("Object name: %s\n", polyData->GetObjectName().c_str());
+  printf("Number of points: %d\n", polyData->GetNumberOfPoints());
 }
 
 EMSCRIPTEN_BINDINGS(vtk_bindings)

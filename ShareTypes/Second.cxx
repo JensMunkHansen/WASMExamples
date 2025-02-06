@@ -6,6 +6,21 @@
 // Same true for class variables!!! Dangerous
 int SomeStaticVariable = 2;
 
+extern "C"
+{
+  // Function to return a pointer to the start of memory
+#if 0
+  uint32_t* getMemoryStartSecond()
+  {
+    return (uint32_t*)0; // Memory starts at 0x0 in linear memory
+  }
+#endif
+  uint32_t getMemoryStartSecond()
+  {
+    return (uint32_t)0x0; // Memory starts at 0x0 in linear memory
+  }
+}
+
 MyData Produce()
 {
   MyData data;
