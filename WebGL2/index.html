@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGL Timestamp Query with WebAssembly</title>
+</head>
+<body>
+    <h1>WebGL Timestamp Query with WebAssembly</h1>
+    <button id="check">Check WebGL Support</button>
+    <button id="start">Start Timestamp Query</button>
+    <button id="get">Get Timestamp</button>
+    <p id="result">Timestamp will be displayed here</p>
+
+    <script type="module">
+        import createModule from "./webgl_timer.js";
+
+        let wasmModule;
+
+        // Load WebAssembly module
+        createModule().then(Module => {
+            wasmModule = Module;
+            console.log("WebAssembly module loaded!");
+            window.wasmModule = wasmModule;
+        });
+
+        document.getElementById("check").addEventListener("click", () => {
+            if (!wasmModule) {
+                alert("WebAssembly not loaded yet!");
+                return;
+            }
+            let supported = wasmModule.cwrap("isWebGLTimestampAvailable", "number", [])();
+            document.getElementById("result").innerText = supported
+                ? "WebGL timestamp queries are supported!"
+                : "WebGL timestamp queries are NOT supported.";
+        });
+
+        document.getElementById("start").addEventListener("click", () => {
+            if (!wasmModule) {
+                alert("WebAssembly not loaded yet!");
+                return;
+            }
+            wasmModule.cwrap("startWebGLTimestampQuery", null, [])();
+            document.getElementById("result").innerText = "Query started!";
+        });
+
+        document.getElementById("get").addEventListener("click", () => {
+            if (!wasmModule) {
+                alert("WebAssembly not loaded yet!");
+                return;
+            }
+        let timestamp = wasmModule.cwrap("getWebGLTimestamp", "number", [])();
+            console.log(timestamp);
+            if (timestamp < 0) {
+                document.getElementById("result").innerText = "Timestamp not ready yet!";
+            } else {
+                document.getElementById("result").innerText = `WebGL GPU Timestamp: ${timestamp} ns`;
+            }
+        });
+    </script>
+</body>
+</html>
