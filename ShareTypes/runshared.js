@@ -11,7 +11,7 @@ async function main() {
         let sharedMemory = new WebAssembly.Memory({
             initial: 256,  // 256 pages (each page is 64KB)
             maximum: 256,  // Keep the max same
-            shared: true   // Enables shared memory
+            shared: true   // Enables shared memory (required for threading)
         });
 
         // Load both WASM modules with the shared memory

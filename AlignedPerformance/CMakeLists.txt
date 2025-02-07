@@ -5,7 +5,7 @@ project(AlignedPerformance)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 
 # TODO: Fix generic build system
-set(USE_NEW FALSE)
+set(USE_NEW TRUE)
 
 option(WASM64 "64-bit WASM" OFF)
 option(SIMD OFF)
