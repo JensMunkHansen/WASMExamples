@@ -21,6 +21,7 @@ extern "C"
 #include <cstdint>
 struct WrappedMyData
 {
+  static int StaticInt;
   MyData data;
   // Constructor to initialize values
   WrappedMyData(int _i, float _f)
@@ -30,7 +31,11 @@ struct WrappedMyData
   }
   // Getters & Setters
   int getInt() const { return data.i; }
-  void setInt(int value) { data.i = value; }
+  void setInt(int value)
+  {
+    data.i = value;
+    WrappedMyData::StaticInt = value;
+  }
 
   float getFloat() const { return data.f; }
   void setFloat(float value) { data.f = value; }

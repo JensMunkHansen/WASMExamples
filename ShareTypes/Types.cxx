@@ -23,7 +23,7 @@ void DestroyStruct(MyData* s)
 }
 
 #ifdef CPPTYPES
-
+int WrappedMyData::StaticInt = 0;
 // Static method for creating object from pointer
 WrappedMyData* WrappedMyData::fromPointer(uintptr_t ptr)
 {
@@ -42,6 +42,7 @@ EMSCRIPTEN_BINDINGS(my_data)
     .function("getPointer",
       emscripten::optional_override(
         [](WrappedMyData& obj) -> uintptr_t { return reinterpret_cast<uintptr_t>(&obj); }))
+    .class_property("StaticInt", &WrappedMyData::StaticInt)
     .class_function("fromPointer", &WrappedMyData::fromPointer,
       emscripten::allow_raw_pointers()); // Static function
 }

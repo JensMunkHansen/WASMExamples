@@ -30,8 +30,6 @@ async function main() {
             console.log("wasmModule2 cannot understand type WrappedMyData from wasmModule1");
         }
 
-        // Dmytro: Serialization
-
         // Reference values
         console.log(`wasmModule1: obj.i = ${obj.i}, obj.f = ${obj.f}`);
         
@@ -52,10 +50,14 @@ async function main() {
         // Copy data to wasmModule2's memory
         let memory2 = new Uint8Array(wasmModule2.HEAPU8.buffer, ptr2, structSize);
         memory2.set(copiedData); // Overwrite wasm2's memory
+        obj2.i = 7; // Saved by mangling
 
         // Verify the copied values
         console.log(`wasmModule2: obj2.i = ${obj2.i}, obj2.f = ${obj2.f}`);
 
+        console.log(wasmModule1.WrappedMyData.StaticInt);
+        console.log(wasmModule2.WrappedMyData.StaticInt);
+        
         // Check if the data was successfully transferred
         if (obj2.i !== obj.i || Math.abs(obj2.f - obj.f) > 0.001) {
             throw "Memory copy failed!";
