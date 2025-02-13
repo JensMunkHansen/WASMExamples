@@ -123,6 +123,7 @@ if (BUILD_TESTING)
     set(LIBRARY_LIST ${LIBRARY_NAME} Catch2::Catch2WithMain)
     sps_emscripten_module(
       VERBOSE
+      MAIN
       TARGET_NAME sampleTest
       SOURCE_FILES test.cxx
       LIBRARIES ${LIBRARY_NAME} Catch2::Catch2WithMain
