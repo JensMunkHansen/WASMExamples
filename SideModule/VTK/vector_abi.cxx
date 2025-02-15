@@ -11,7 +11,6 @@ struct VectorView
   int capacity;
   int elementSize;
   int elementType; // Conforms to VTK type values
-
   int referenceCount;
   VectorUpdateCallback updateCallback;
   void* userData;
@@ -47,37 +46,36 @@ static int GetElementSize(int elementType)
   }
 }
 
-VectorView* CreateVector(int elementType)
+void CreateVector(int elementType, VectorView** view)
 {
   int elementSize = GetElementSize(elementType);
   if (elementSize == 0)
   {
-    printf("Unsupported element type: %d\n", elementType);
-    return nullptr;
+    // printf("Unsupported element type: %d\n", elementType);
+    return;
   }
 
-  VectorView* view = (VectorView*)malloc(sizeof(VectorView));
+  *view = (VectorView*)malloc(sizeof(VectorView));
   if (!view)
   {
-    printf("Memory allocation for VectorView failed.\n");
-    return nullptr;
+    // printf("Memory allocation for VectorView failed.\n");
+    return;
   }
 
-  view->data = nullptr;
-  view->nTuples = 0;
-  view->nComponents = 1;
-  view->capacity = 0;
-  view->elementSize = elementSize;
-  view->elementType = elementType;
-  view->updateCallback = nullptr;
-  view->userData = nullptr;
-  view->referenceCount = 1;
-  return view;
+  (*view)->data = nullptr;
+  (*view)->nTuples = 0;
+  (*view)->nComponents = 1;
+  (*view)->capacity = 0;
+  (*view)->elementSize = elementSize;
+  (*view)->elementType = elementType;
+  (*view)->updateCallback = nullptr;
+  (*view)->userData = nullptr;
+  (*view)->referenceCount = 1;
 }
 
-int GetReferenceCounter(VectorView* view)
+void GetReferenceCounter(VectorView* view, int* referenceCount)
 {
-  return view->referenceCount;
+  *referenceCount = view->referenceCount;
 }
 void SetReferenceCounter(VectorView* view, int count)
 {
@@ -94,7 +92,6 @@ void IncrementReference(VectorView* view)
 
 void DecrementReference(VectorView* view)
 {
-  printf("Decrementing counter %d\n", view->referenceCount);
   if (view)
   {
     view->referenceCount--;
@@ -110,7 +107,7 @@ void DecrementReference(VectorView* view)
   }
 }
 
-void DestroyVector(VectorView* view)
+void DeleteVector(VectorView* view)
 {
   if (view)
   {
@@ -149,19 +146,19 @@ void SetNumberOfComponents(VectorView* view, int nComponents)
   }
 }
 
-void* GetDataPointer(VectorView* view)
+void GetDataPointer(VectorView* view, void** data)
 {
-  return view->data;
+  *data = view->data;
 }
 
-int GetNumberOfTuples(VectorView* view)
+void GetNumberOfTuples(VectorView* view, int* nTuples)
 {
-  return view->nTuples;
+  *nTuples = view->nTuples;
 }
 
-int GetNumberOfComponents(VectorView* view)
+void GetNumberOfComponents(VectorView* view, int* nComponents)
 {
-  return view->nComponents;
+  *nComponents = view->nComponents;
 }
 
 void ResizeVector(VectorView* view, int newCapacity)
@@ -176,26 +173,24 @@ void ResizeVector(VectorView* view, int newCapacity)
   {
     return;
   }
-
-  void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
-  if (!newData)
+  else
   {
-    printf("Memory allocation failed.\n");
-    exit(1);
+    void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
+    if (!newData)
+    {
+      printf("Memory allocation failed.\n");
+    }
+    view->data = newData;
+    view->capacity = newCapacity;
   }
-
-  view->data = newData;
-  view->capacity = newCapacity;
-
   if (view->updateCallback)
   {
     view->updateCallback(view, view->userData);
   }
 }
-
-int GetElementType(VectorView* view)
+void GetElementType(VectorView* view, int* elementType)
 {
-  return view->elementType;
+  *elementType = view->elementType;
 }
 
 void ShallowCopy(VectorView* dest, const VectorView* src)
