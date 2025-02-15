@@ -4,59 +4,91 @@
 #include "vector_abi.h"
 #include <emscripten/bind.h>
 #include <iostream>
+#include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
+#include <vtkIntArray.h>
 #include <vtkNew.h>
 
-// Just a static array for test purpose
+#include <vtkType.h>
+#include <vtkTypeTraits.h>
+
+// Just a static array for test purposes
 vtkNew<vtkFloatArray> myArray;
 
-// Callback function to be called when VectorView is updated
-void MyUpdateCallback(VectorView* view, void* userData)
+template <typename VTKArrayType, typename ScalarType>
+void SynchronizeHelper(VectorView* view)
 {
-  int nTuples;
-  GetNumberOfTuples(view, &nTuples);
-  int nComponents;
-  GetNumberOfComponents(view, &nComponents);
+  std::cout << "Callback invoked! Updating array of type " << typeid(ScalarType).name() << "..."
+            << std::endl;
 
-  std::cout << "Callback invoked! Updating vtkFloatArray..." << std::endl;
-  std::cout << "New size: " << nTuples << " tuples, " << nComponents << " components" << std::endl;
+  // Get the new dimensions
+  int nTuples;
+  int nComponents;
+  GetNumberOfTuples(view, &nTuples);
+  GetNumberOfComponents(view, &nComponents);
 
   if ((myArray->GetNumberOfTuples() != nTuples) ||
     (myArray->GetNumberOfComponents() != nComponents))
   {
-    // We need to set the data pointer
+    // Memory resized - set the pointer
     void* newDataPointer;
     GetDataPointer(view, &newDataPointer);
-    size_t newLength = nTuples * nComponents * sizeof(float); // HACK
-    myArray->SetVoidArray(newDataPointer, newLength, 1, VTK_FLOAT);
+    size_t newLength = nTuples * nComponents;
+    // Does not change reference count
+    myArray->SetVoidArray(newDataPointer, newLength, 1, vtkTypeTraits<ScalarType>::VTKTypeID());
   }
   // Resize the vtkFloatArray to match the updated VectorView dimensions
   myArray->SetNumberOfComponents(nComponents);
   myArray->SetNumberOfTuples(nTuples);
-
-  // TODO: Set pointer if reallocated
 }
 
+void Synchronize(VectorView* view, void* userData)
+{
+  int dataType = *reinterpret_cast<int*>(userData);
+  switch (dataType)
+  {
+    case VTK_FLOAT:
+      SynchronizeHelper<vtkFloatArray, float>(view);
+      break;
+    case VTK_DOUBLE:
+      SynchronizeHelper<vtkDoubleArray, double>(view);
+      break;
+    case VTK_INT:
+      SynchronizeHelper<vtkIntArray, int>(view);
+      break;
+    // Add more cases as needed for other VTK types
+    default:
+      std::cerr << "Unsupported data type in Synchronize callback!" << std::endl;
+      break;
+  }
+}
+
+static int MyArrayType = VTK_FLOAT;
 void TestMe()
 {
   myArray->SetNumberOfTuples(10);
-  myArray->SetNumberOfComponents(3);
+  myArray->SetNumberOfComponents(1);
+  // Just a test to set something by main module
   myArray->SetValue(0, 1.0f);
-  VectorView* vectorView;
-  CreateVector(VTK_INT, &vectorView);
-  SetNumberOfTuples(vectorView, 10);
-  SetNumberOfComponents(vectorView, 3);
+
+  VectorView* vectorView = nullptr;
+  CreateVector(vectorView, VTK_FLOAT);
+  SetNumberOfTuples(vectorView, myArray->GetNumberOfTuples());
+  SetNumberOfComponents(vectorView, myArray->GetNumberOfComponents());
   SetDataPointer(vectorView, myArray->GetVoidPointer(0));
-
   // Set the callback for this vector
-  SetUpdateCallback(vectorView, MyUpdateCallback, nullptr);
+  SetUpdateCallback(vectorView, Synchronize, &MyArrayType);
 
+  // Do some processing in another WASM module (not knowing VTK)
   Process(vectorView);
-
-  for (int i = 0; i < 20; i++)
+  int nTuples;
+  GetNumberOfTuples(vectorView, &nTuples);
+  for (int i = 0; i < nTuples; i++)
   {
-    std::cout << myArray->GetValue(i) << std::endl;
+    std::cout << i << ": " << myArray->GetValue(i) << std::endl;
   }
+  // Cleanup
+  DeleteVector(vectorView);
 }
 
 EMSCRIPTEN_BINDINGS(SideModuleTest)

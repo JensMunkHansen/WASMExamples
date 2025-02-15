@@ -8,11 +8,14 @@ void Process(struct VectorView* vectorView)
   int nComponents;
   int nTuples;
 
+  // Change the dimensions
   SetNumberOfTuples(vectorView, 20);
 
+  // Get number of dimensions
   GetNumberOfComponents(vectorView, &nComponents);
   GetNumberOfTuples(vectorView, &nTuples);
 
+  // TODO: Wrap in C++ (templates)
   void* pData = nullptr;
   GetDataPointer(vectorView, &pData);
   if (pData)
@@ -23,10 +26,8 @@ void Process(struct VectorView* vectorView)
     {
       for (int j = 0; j < nComponents; ++j)
       {
-        pFloatData[i * nComponents + j] = 42.0f;
+        pFloatData[i * nComponents + j] = (float)i;
       }
     }
   }
-  // Cleanup
-  DeleteVector(vectorView);
 }

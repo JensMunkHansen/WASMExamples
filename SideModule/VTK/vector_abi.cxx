@@ -14,6 +14,7 @@ struct VectorView
   int referenceCount;
   VectorUpdateCallback updateCallback;
   void* userData;
+  void* clientData;
 };
 
 // Helper function to get the size of each element based on VTK elementType
@@ -46,7 +47,7 @@ static int GetElementSize(int elementType)
   }
 }
 
-void CreateVector(int elementType, VectorView** view)
+void CreateVector(VectorView*& view, int elementType)
 {
   int elementSize = GetElementSize(elementType);
   if (elementSize == 0)
@@ -55,22 +56,22 @@ void CreateVector(int elementType, VectorView** view)
     return;
   }
 
-  *view = (VectorView*)malloc(sizeof(VectorView));
+  view = (VectorView*)malloc(sizeof(VectorView));
   if (!view)
   {
     // printf("Memory allocation for VectorView failed.\n");
     return;
   }
-
-  (*view)->data = nullptr;
-  (*view)->nTuples = 0;
-  (*view)->nComponents = 1;
-  (*view)->capacity = 0;
-  (*view)->elementSize = elementSize;
-  (*view)->elementType = elementType;
-  (*view)->updateCallback = nullptr;
-  (*view)->userData = nullptr;
-  (*view)->referenceCount = 1;
+  view->data = nullptr;
+  view->nTuples = 0;
+  view->nComponents = 1;
+  view->capacity = 0;
+  view->elementSize = elementSize;
+  view->elementType = elementType;
+  view->updateCallback = nullptr;
+  view->userData = &view->elementType;
+  view->clientData = nullptr;
+  view->referenceCount = 1;
 }
 
 void GetReferenceCounter(VectorView* view, int* referenceCount)
@@ -209,10 +210,10 @@ void ShallowCopy(VectorView* dest, const VectorView* src)
   dest->elementType = src->elementType;
 }
 
-void SetUpdateCallback(VectorView* view, VectorUpdateCallback callback, void* userData)
+void SetUpdateCallback(VectorView* view, VectorUpdateCallback callback, void* clientData)
 {
   if (!view)
     return;
   view->updateCallback = callback;
-  view->userData = userData;
+  view->clientData = clientData;
 }

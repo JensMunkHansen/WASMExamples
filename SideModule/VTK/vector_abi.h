@@ -8,9 +8,11 @@ extern "C"
 
   typedef struct VectorView VectorView; // Opaque type for the low-level API
 
-  // Low-level operations (type-agnostic)
-  void CreateVector(
-    int elementType, VectorView** obj); // elementType is an integer representing the data type
+  // Callback to call when the memory is updated
+  typedef void (*VectorUpdateCallback)(VectorView* view, void* userData);
+
+  // Low-level operations (type-agnostic). We cannot return values (memory space is different)
+  void CreateVector(VectorView*& obj, int elementType);
   void DeleteVector(VectorView* view);
   void GetReferenceCounter(VectorView* view, int* referenceCount);
   void SetReferenceCounter(VectorView* view, int);
@@ -23,11 +25,7 @@ extern "C"
   void ShallowCopy(const VectorView* src, VectorView* dest);
 
   void ResizeVector(VectorView* view, int newCapacity);
-  void GetElementType(
-    VectorView* view, int* elementType); // Returns the integer representing the type
-
-  // Callback to call when the memory is updated
-  typedef void (*VectorUpdateCallback)(VectorView* view, void* userData);
+  void GetElementType(VectorView* view, int* elementType);
 
   void SetUpdateCallback(VectorView* view, VectorUpdateCallback callback, void* userData);
 
