@@ -9,7 +9,7 @@ struct ArrayView
   void* data;
   int nTuples;
   int nComponents;
-  int capacity; // TODO: Do this efficiently
+  int capacity; // Number of tuples
   int elementSize;
   int elementType; // Conforms to VTK type values
   int referenceCount;
