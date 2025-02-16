@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.15)
 project(VTKABITest
   LANGUAGES C CXX)
 
+# Set the C++ standard to C++17
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)  # Ensures no compiler-specific extensions like GNU++17 are used
+
 include(CTest)
 enable_testing()
 
@@ -38,10 +43,12 @@ sps_emscripten_module(
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME ${SIDE_TARGET_NAME}
-  EXPORTED_FUNCTIONS Process
+#  EXPORTED_FUNCTIONS "Process;ArrayCreate;ArrayDelete;ArrayReferenceCounterGet;ArrayReferenceCounterSet;ArrayDataPointerGet;ArrayDataPointerSet;ArrayShallowCopy;ArrayNumberOfTuplesGet;ArrayNumberOfTuplesSet;ArrayNumberOfComponentsGet;ArrayNumberOfComponentsSet;ArrayResize;ArrayElementTypeGet;ArrayUpdateCallbackSet;ArrayElementSizeGet"
+  EXPORTED_FUNCTIONS "Process"
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "vector_abi.cxx;side_abi.cxx")
+#  SOURCE_FILES "array_abi.cxx;side_array_abi.cxx")
 message("CMAKE_CFG_INTDIR: ${CMAKE_CFG_INTDIR}")
 
 sps_emscripten_module(
@@ -57,6 +64,7 @@ sps_emscripten_module(
   TARGET_NAME ${TARGET_NAME}
   SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SideModule.wasm"
   SOURCE_FILES "host.cxx;vector_abi.cxx"
+#  SOURCE_FILES "host_array.cxx"#;array_abi.cxx"
   JAVASCRIPT_FILES "run_SideModuleTest.js")
 
 add_test(NAME ES6_SideModule_NoErrors

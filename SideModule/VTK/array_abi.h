@@ -12,25 +12,27 @@ extern "C"
   // Callback to call when the memory is updated
   typedef void (*ArrayUpdateCallback)(ArrayView* view, void* userData);
 
+  void ArrayElementSizeGet(int elementType, int* size);
+
   // Low-level operations (type-agnostic).
   // We cannot return values (memory space is different)
-  void ArrayCreate(ArrayView*& obj, int elementType);
-  void ArrayDelete(ArrayView* view);
-  void ArrayReferenceCounterGet(ArrayView* view, int* referenceCount);
+  void ArrayCreate(ArrayView*& obj, int elementType); // *& not supported
+  void ArrayDelete(ArrayView* view);                  // TODO: Use reference
+  void ArrayReferenceCounterGet(const ArrayView* view, int* referenceCount);
   void ArrayReferenceCounterSet(ArrayView* view, int);
   // Data pointer
-  void ArrayDataPointerGet(ArrayView* view, void** data);
+  void ArrayDataPointerGet(const ArrayView* view, void** data);
   void ArrayDataPointerSet(ArrayView* view, void* data);
   void ArrayShallowCopy(const ArrayView* src, ArrayView* dest);
   // Number of tuples
-  void ArrayNumberOfTuplesGet(ArrayView* view, int* nTuples);
+  void ArrayNumberOfTuplesGet(const ArrayView* view, int* nTuples);
   void ArrayNumberOfTuplesSet(ArrayView* view, int nTuples);
   // Number of components
-  void ArrayNumberOfComponentsGet(ArrayView* view, int* nComponents);
+  void ArrayNumberOfComponentsGet(const ArrayView* view, int* nComponents);
   void ArrayNumberOfComponentsSet(ArrayView* view, int nComponents);
 
   void ArrayResize(ArrayView* view, int newCapacity);
-  void ArrayElementTypeGet(ArrayView* view, int* elementType);
+  void ArrayElementTypeGet(const ArrayView* view, int* elementType);
 
   void ArrayUpdateCallbackSet(ArrayView* view, ArrayUpdateCallback callback, void* userData);
 

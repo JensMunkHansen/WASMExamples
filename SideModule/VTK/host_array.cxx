@@ -45,6 +45,8 @@ void SynchronizeHelper(ArrayView* view)
 
 void Synchronize(ArrayView* view, void* userData)
 {
+  std::cout << "Synchronize" << std::endl;
+
   int dataType = *reinterpret_cast<int*>(userData);
   switch (dataType)
   {
@@ -67,19 +69,34 @@ void Synchronize(ArrayView* view, void* userData)
 static int MyArrayType = VTK_FLOAT;
 void TestMe()
 {
+  std::cout << "SetNumberOfTuples" << std::endl;
   myArray->SetNumberOfTuples(10);
+  std::cout << "SetNumberOfComponents" << std::endl;
   myArray->SetNumberOfComponents(1);
   // Just a test to set something by main module
   myArray->SetValue(0, 1.0f);
 
   ArrayView* arrayView = nullptr;
+  std::cout << "ArrayCreate" << std::endl;
   ArrayCreate(arrayView, VTK_FLOAT);
+
+  if (arrayView == nullptr)
+  {
+    std::cout << "arrayView is nullptr" << std::endl;
+  }
+
+  std::cout << "ArrayNumberOfTuplesSet" << std::endl;
   ArrayNumberOfTuplesSet(arrayView, myArray->GetNumberOfTuples());
+  std::cout << "ArrayNumberOfComponentsSet" << std::endl;
   ArrayNumberOfComponentsSet(arrayView, myArray->GetNumberOfComponents());
+  std::cout << "ArrayDataPointerSet" << std::endl;
   ArrayDataPointerSet(arrayView, myArray->GetVoidPointer(0));
   // Set the callback for this vector
   void* clientData = nullptr;
+  std::cout << "ArrayUpdateCallbackSet" << std::endl;
   ArrayUpdateCallbackSet(arrayView, Synchronize, clientData);
+
+  std::cout << "Process" << std::endl;
 
   // Do some processing in another WASM module (not knowing VTK)
   Process(arrayView);

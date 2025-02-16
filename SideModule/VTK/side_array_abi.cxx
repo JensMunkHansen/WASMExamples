@@ -9,6 +9,11 @@ void Process(struct ArrayView* arrayView)
   int nTuples;
 
   // Change the dimensions
+  if (arrayView == nullptr)
+  {
+    puts("arrayView is null");
+    fflush(stdout);
+  }
   ArrayNumberOfTuplesSet(arrayView, 20);
 
   // Get number of dimensions

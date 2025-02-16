@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <cstring>
 
+// TODO: Support capacity
 struct ArrayView
 {
   void* data;
@@ -18,38 +19,49 @@ struct ArrayView
 };
 
 // Helper function to get the size of each element based on VTK elementType
-static int ArrayElementSizeGet(int elementType)
+void ArrayElementSizeGet(int elementType, int* size)
 {
   switch (elementType)
   {
     case 10:
-      return sizeof(float); // VTK_FLOAT
+      *size = sizeof(float); // VTK_FLOAT
+      break;
     case 11:
-      return sizeof(double); // VTK_DOUBLE
+      *size = sizeof(double); // VTK_DOUBLE
+      break;
     case 2:
-      return sizeof(char); // VTK_CHAR
+      *size = sizeof(char); // VTK_CHAR
+      break;
     case 3:
-      return sizeof(unsigned char); // VTK_UNSIGNED_CHAR
+      *size = sizeof(unsigned char); // VTK_UNSIGNED_CHAR
+      break;
     case 4:
-      return sizeof(short); // VTK_SHORT
+      *size = sizeof(short); // VTK_SHORT
+      break;
     case 5:
-      return sizeof(unsigned short); // VTK_UNSIGNED_SHORT
+      *size = sizeof(unsigned short); // VTK_UNSIGNED_SHORT
+      break;
     case 6:
-      return sizeof(int); // VTK_INT
+      *size = sizeof(int); // VTK_INT
+      break;
     case 7:
-      return sizeof(unsigned int); // VTK_UNSIGNED_INT
+      *size = sizeof(unsigned int); // VTK_UNSIGNED_INT
+      break;
     case 12:
-      return sizeof(long long); // VTK_LONG_LONG
+      *size = sizeof(long long); // VTK_LONG_LONG
+      break;
     case 13:
-      return sizeof(unsigned long long); // VTK_UNSIGNED_LONG_LONG
+      *size = sizeof(unsigned long long); // VTK_UNSIGNED_LONG_LONG
+      break;
     default:
-      return 0; // Unsupported type
+      *size = 0; // Unsupported type
   }
 }
 
 void ArrayCreate(ArrayView*& view, int elementType)
 {
-  int elementSize = ArrayElementSizeGet(elementType);
+  int elementSize;
+  ArrayElementSizeGet(elementType, &elementSize);
   if (elementSize == 0)
   {
     return;
@@ -72,7 +84,7 @@ void ArrayCreate(ArrayView*& view, int elementType)
   view->referenceCount = 1;
 }
 
-void ArrayReferenceCounterGet(ArrayView* view, int* referenceCount)
+void ArrayReferenceCounterGet(const ArrayView* view, int* referenceCount)
 {
   *referenceCount = view->referenceCount;
 }
@@ -117,84 +129,117 @@ void ArrayDelete(ArrayView* view)
 
 void ArrayDataPointerSet(ArrayView* view, void* data)
 {
-  view->data = data;
-  if (view->updateCallback)
+  if (view)
   {
-    view->updateCallback(view, view->userData);
+    view->data = data;
+    if (view->updateCallback)
+    {
+      view->updateCallback(view, view->userData);
+    }
   }
 }
 
 void ArrayNumberOfTuplesSet(ArrayView* view, int nTuples)
 {
-  if (nTuples > view->capacity)
+  if (view)
   {
-    ArrayResize(view, nTuples);
-  }
-  view->nTuples = nTuples;
-  if (view->updateCallback)
-  {
-    view->updateCallback(view, view->userData);
+    if (nTuples > view->capacity)
+    {
+      ArrayResize(view, nTuples);
+    }
+    view->nTuples = nTuples;
+    if (view->updateCallback)
+    {
+      view->updateCallback(view, view->userData);
+    }
   }
 }
 
 void ArrayNumberOfComponentsSet(ArrayView* view, int nComponents)
 {
-  view->nComponents = nComponents;
-  if (view->updateCallback)
+  if (view)
   {
-    view->updateCallback(view, view->userData);
+    view->nComponents = nComponents;
+    if (view->updateCallback)
+    {
+      view->updateCallback(view, view->userData);
+    }
   }
 }
 
-void ArrayDataPointerGet(ArrayView* view, void** data)
+void ArrayDataPointerGet(const ArrayView* view, void** data)
 {
-  *data = view->data;
+  if (view)
+  {
+    *data = view->data;
+  }
+  else
+  {
+    *data = nullptr;
+  }
 }
 
-void ArrayNumberOfTuplesGet(ArrayView* view, int* nTuples)
+void ArrayNumberOfTuplesGet(const ArrayView* view, int* nTuples)
 {
-  *nTuples = view->nTuples;
+  if (view)
+  {
+    *nTuples = view->nTuples;
+  }
+  else
+  {
+    *nTuples = -1;
+  }
 }
 
-void ArrayNumberOfComponentsGet(ArrayView* view, int* nComponents)
+void ArrayNumberOfComponentsGet(const ArrayView* view, int* nComponents)
 {
-  *nComponents = view->nComponents;
+  if (view)
+  {
+    *nComponents = view->nComponents;
+  }
 }
 
 void ArrayResize(ArrayView* view, int newCapacity)
 {
-  if (view->elementSize == 0)
+  if (view)
   {
-    printf("Element size not set.\n");
-    return;
-  }
-
-  if (newCapacity <= view->capacity)
-  {
-    return;
-  }
-  else
-  {
-    void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
-    if (!newData)
+    if (view->elementSize == 0)
     {
-      printf("Memory allocation failed.\n");
+      printf("Element size not set.\n");
+      return;
     }
-    view->data = newData;
-    view->capacity = newCapacity;
-  }
-  if (view->updateCallback)
-  {
-    view->updateCallback(view, view->userData);
+
+    if (newCapacity <= view->capacity)
+    {
+      return;
+    }
+    else
+    {
+      // Must be compatible with how VTK is compiled!!!
+      void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
+      if (!newData)
+      {
+        printf("Memory allocation failed.\n");
+      }
+      view->data = newData;
+      view->capacity = newCapacity;
+    }
+    if (view->updateCallback)
+    {
+      view->updateCallback(view, view->userData);
+    }
   }
 }
 
-void ArrayElementTypeGet(ArrayView* view, int* elementType)
+void ArrayElementTypeGet(const ArrayView* view, int* elementType)
 {
-  *elementType = view->elementType;
+  if (view)
+  {
+    *elementType = view->elementType;
+  }
 }
 
-void ArrayShallowCopy(ArrayView* dest, const ArrayView* src)
+void ArrayShallowCopy(const ArrayView* src, ArrayView* dest)
 {
   if (!dest || !src)
   {

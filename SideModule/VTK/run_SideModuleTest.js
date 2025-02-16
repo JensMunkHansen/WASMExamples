@@ -10,6 +10,7 @@ async function main() {
     try {
         // Load the WASM module
         wasmModule = await loadSideModuleTest(options);
+        console.log("Module loaded");
         wasmModule.TestMe();
     } catch (error) {
         console.error("An error occurred:", error);
