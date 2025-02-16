@@ -1,6 +1,8 @@
 #ifndef ARRAY_ABI_H
 #define ARRAY_ABI_H
 
+#include "abi.h"
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -10,31 +12,31 @@ extern "C"
   typedef struct ArrayView ArrayView;
 
   // Callback to call when the memory is updated
-  typedef void (*ArrayUpdateCallback)(ArrayView* view, void* userData);
+  typedef ABI_FUNC((*ArrayUpdateCallback))(ArrayView* view, void* userData);
 
-  void ArrayElementSizeGet(int elementType, int* size);
+  ABI_FUNC(ArrayElementSizeGet)(int elementType, int* size);
 
   // Low-level operations (type-agnostic).
   // We cannot return values (memory space is different)
-  void ArrayCreate(ArrayView*& obj, int elementType); // *& not supported
-  void ArrayDelete(ArrayView* view);                  // TODO: Use reference
-  void ArrayReferenceCounterGet(const ArrayView* view, int* referenceCount);
-  void ArrayReferenceCounterSet(ArrayView* view, int);
+  ABI_FUNC(ArrayCreate)(ArrayView*& obj, int elementType); // *& not supported
+  ABI_FUNC(ArrayDelete)(ArrayView* view);                  // TODO: Use reference
+  ABI_FUNC(ArrayReferenceCounterGet)(const ArrayView* view, int* referenceCount);
+  ABI_FUNC(ArrayReferenceCounterSet)(ArrayView* view, int);
   // Data pointer
-  void ArrayDataPointerGet(const ArrayView* view, void** data);
-  void ArrayDataPointerSet(ArrayView* view, void* data);
-  void ArrayShallowCopy(const ArrayView* src, ArrayView* dest);
+  ABI_FUNC(ArrayDataPointerGet)(const ArrayView* view, void** data);
+  ABI_FUNC(ArrayDataPointerSet)(ArrayView* view, void* data);
+  ABI_FUNC(ArrayShallowCopy)(const ArrayView* src, ArrayView* dest);
   // Number of tuples
-  void ArrayNumberOfTuplesGet(const ArrayView* view, int* nTuples);
-  void ArrayNumberOfTuplesSet(ArrayView* view, int nTuples);
+  ABI_FUNC(ArrayNumberOfTuplesGet)(const ArrayView* view, int* nTuples);
+  ABI_FUNC(ArrayNumberOfTuplesSet)(ArrayView* view, int nTuples);
   // Number of components
-  void ArrayNumberOfComponentsGet(const ArrayView* view, int* nComponents);
-  void ArrayNumberOfComponentsSet(ArrayView* view, int nComponents);
+  ABI_FUNC(ArrayNumberOfComponentsGet)(const ArrayView* view, int* nComponents);
+  ABI_FUNC(ArrayNumberOfComponentsSet)(ArrayView* view, int nComponents);
 
-  void ArrayResize(ArrayView* view, int newCapacity);
-  void ArrayElementTypeGet(const ArrayView* view, int* elementType);
+  ABI_FUNC(ArrayResize)(ArrayView* view, int newCapacity);
+  ABI_FUNC(ArrayElementTypeGet)(const ArrayView* view, int* elementType);
 
-  void ArrayUpdateCallbackSet(ArrayView* view, ArrayUpdateCallback callback, void* userData);
+  ABI_FUNC(ArrayUpdateCallbackSet)(ArrayView* view, ArrayUpdateCallback callback, void* userData);
 
 #ifdef __cplusplus
 }

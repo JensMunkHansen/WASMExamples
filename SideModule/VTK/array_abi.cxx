@@ -1,9 +1,9 @@
 #include "array_abi.h"
-#include <cstdio>
 #include <cstdlib>
 #include <cstring>
 
-// TODO: Support capacity
+// We don't have the full runtime, so stdio support
+
 struct ArrayView
 {
   void* data;
@@ -15,7 +15,7 @@ struct ArrayView
   int referenceCount;
   ArrayUpdateCallback updateCallback;
   void* userData;
-  void* clientData;
+  void* clientData; // Currently unused
 };
 
 // Helper function to get the size of each element based on VTK elementType
@@ -205,7 +205,7 @@ void ArrayResize(ArrayView* view, int newCapacity)
   {
     if (view->elementSize == 0)
     {
-      printf("Element size not set.\n");
+      // printf("Element size not set.\n");
       return;
     }
 
@@ -219,7 +219,7 @@ void ArrayResize(ArrayView* view, int newCapacity)
       void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
       if (!newData)
       {
-        printf("Memory allocation failed.\n");
+        // printf("Memory allocation failed.\n"); // requires -sEXIT_RUNTIME=1 -sFULL_ES3=1
       }
       view->data = newData;
       view->capacity = newCapacity;
@@ -243,7 +243,7 @@ void ArrayShallowCopy(const ArrayView* src, ArrayView* dest)
 {
   if (!dest || !src)
   {
-    printf("ShallowCopy: Null vector passed.\n");
+    // printf("ShallowCopy: Null vector passed.\n");
     return;
   }
 
