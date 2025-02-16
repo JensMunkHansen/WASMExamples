@@ -18,8 +18,8 @@ extern "C"
 
   // Low-level operations (type-agnostic).
   // We cannot return values (memory space is different)
-  ABI_FUNC(ArrayCreate)(ArrayView*& obj, int elementType); // *& not supported
-  ABI_FUNC(ArrayDelete)(ArrayView* view);                  // TODO: Use reference
+  ABI_FUNC(ArrayCreate)(ArrayView*& obj, int elementType);
+  ABI_FUNC(ArrayDelete)(ArrayView* view); // TODO: Use reference
   ABI_FUNC(ArrayReferenceCounterGet)(const ArrayView* view, int* referenceCount);
   ABI_FUNC(ArrayReferenceCounterSet)(ArrayView* view, int);
   // Data pointer
