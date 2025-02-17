@@ -13,7 +13,7 @@ enable_testing()
 
 find_package(VTK
   COMPONENTS
-  vtkCommonCore
+  CommonCore
 )
 
 set(TARGET_NAME VTKABITest)
@@ -47,7 +47,7 @@ sps_emscripten_module(
   EXPORTED_FUNCTIONS "Process"
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
-  SOURCE_FILES "side_array_abi.cxx")
+  SOURCE_FILES "array_abi.cxx;side_array_abi.cxx")
 
 sps_emscripten_module(
   SIDE_MODULE
@@ -72,12 +72,11 @@ sps_emscripten_module(
   LIBRARIES ${VTK_LIBRARIES}
   TARGET_NAME ${TARGET_NAME}
   SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SideModule.wasm;${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Runtime.wasm"
-#  SOURCE_FILES "host.cxx;vector_abi.cxx"
-  SOURCE_FILES "host_array.cxx"#;array_abi.cxx"
+  SOURCE_FILES "host_array.cxx"
   JAVASCRIPT_FILES "run_SideModuleTest.js")
 
-add_dependencies(${TARGET_NAME} ${SIDE_TARGET_NAME} Runtime)
-add_dependencies(${TARGET_NAME} Runtime)
+add_dependencies(${TARGET_NAME} ${SIDE_TARGET_NAME})
+add_dependencies(${SIDE_TARGET_NAME} Runtime)
 
 add_test(NAME ES6_SideModule_NoErrors
   COMMAND

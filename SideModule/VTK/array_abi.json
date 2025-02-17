@@ -1,19 +1,17 @@
-{
-    "functions": [
-        "_ArrayCreate",
-        "_ArrayDelete",
-        "_ArrayReferenceCounterGet",
-        "_ArrayReferenceCounterSet",
-        "_ArrayDataPointerGet",
-        "_ArrayDataPointerSet",
-        "_ArrayShallowCopy",
-        "_ArrayNumberOfTuplesGet",
-        "_ArrayNumberOfTuplesSet",
-        "_ArrayNumberOfComponentsGet",
-        "_ArrayNumberOfComponentsSet",
-        "_ArrayResize",
-        "_ArrayElementTypeGet",
-        "_ArrayUpdateCallbackSet",
-        "_ArrayElementSizeGet"
-    ]
-}
+[
+    _ArrayCreate,
+    _ArrayDelete,
+    _ArrayReferenceCounterGet,
+    _ArrayReferenceCounterSet,
+    _ArrayDataPointerGet,
+    _ArrayDataPointerSet,
+    _ArrayShallowCopy,
+    _ArrayNumberOfTuplesGet,
+    _ArrayNumberOfTuplesSet,
+    _ArrayNumberOfComponentsGet,
+    _ArrayNumberOfComponentsSet,
+    _ArrayResize,
+    _ArrayElementTypeGet,
+    _ArrayUpdateCallbackSet,
+    _ArrayElementSizeGet
+]
