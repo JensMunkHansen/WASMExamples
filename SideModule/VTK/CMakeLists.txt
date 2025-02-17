@@ -55,7 +55,7 @@ sps_emscripten_module(
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME Runtime
-  EXPORTED_FUNCTIONS "ArrayCreate;ArrayDelete;ArrayReferenceCounterGet;ArrayReferenceCounterSet;ArrayDataPointerGet;ArrayDataPointerSet;ArrayShallowCopy;ArrayNumberOfTuplesGet;ArrayNumberOfTuplesSet;ArrayNumberOfComponentsGet;ArrayNumberOfComponentsSet;ArrayResize;ArrayElementTypeGet;ArrayUpdateCallbackSet;ArrayElementSizeGet"
+  EXPORTED_FUNCTIONS "@${CMAKE_CURRENT_SOURCE_DIR}/array_abi.json"
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "array_abi.cxx")
