@@ -1,6 +1,8 @@
 The function call is almost as fast as calling an internal
 function. This is comparable to PLT (Procedure Linkage Table) lookups
-in native DLLs. Calling requires lookup in WASM table.
+in native DLLs. Calling requires lookup in WASM table. One jump
+instruction. First time a Global Offset Table (GOT) lookup. First call
+10-100 times slower. 5 cycles slower, '-fno-plt' Use -flto
 
 
 Why doesn't Embind support type library generation that can be shared between WASM modules
