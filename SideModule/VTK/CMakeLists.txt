@@ -13,7 +13,8 @@ enable_testing()
 
 find_package(VTK
   COMPONENTS
-  vtkCommonCore)
+  vtkCommonCore
+)
 
 set(TARGET_NAME VTKABITest)
 
@@ -43,13 +44,21 @@ sps_emscripten_module(
   ES6_MODULE OFF
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME ${SIDE_TARGET_NAME}
-  EXPORTED_FUNCTIONS "Process;ArrayCreate;ArrayDelete;ArrayReferenceCounterGet;ArrayReferenceCounterSet;ArrayDataPointerGet;ArrayDataPointerSet;ArrayShallowCopy;ArrayNumberOfTuplesGet;ArrayNumberOfTuplesSet;ArrayNumberOfComponentsGet;ArrayNumberOfComponentsSet;ArrayResize;ArrayElementTypeGet;ArrayUpdateCallbackSet;ArrayElementSizeGet"
-  #EXPORTED_FUNCTIONS "Process"
+  EXPORTED_FUNCTIONS "Process"
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
-#  SOURCE_FILES "vector_abi.cxx;side_abi.cxx")
-  SOURCE_FILES "array_abi.cxx;side_array_abi.cxx")
-message("CMAKE_CFG_INTDIR: ${CMAKE_CFG_INTDIR}")
+  SOURCE_FILES "side_array_abi.cxx")
+
+sps_emscripten_module(
+  SIDE_MODULE
+  VERBOSE
+  ES6_MODULE OFF
+  THREADING_ENABLED ON # Required for shared memory
+  TARGET_NAME Runtime
+  EXPORTED_FUNCTIONS "ArrayCreate;ArrayDelete;ArrayReferenceCounterGet;ArrayReferenceCounterSet;ArrayDataPointerGet;ArrayDataPointerSet;ArrayShallowCopy;ArrayNumberOfTuplesGet;ArrayNumberOfTuplesSet;ArrayNumberOfComponentsGet;ArrayNumberOfComponentsSet;ArrayResize;ArrayElementTypeGet;ArrayUpdateCallbackSet;ArrayElementSizeGet"
+  DEBUG ${WASMExamples_DEBUG}
+  OPTIMIZATION ${WASMExamples_OPTIMIZATION}
+  SOURCE_FILES "array_abi.cxx")
 
 sps_emscripten_module(
   MAIN_MODULE
@@ -62,14 +71,16 @@ sps_emscripten_module(
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   LIBRARIES ${VTK_LIBRARIES}
   TARGET_NAME ${TARGET_NAME}
-  SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SideModule.wasm"
+  SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SideModule.wasm;${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Runtime.wasm"
 #  SOURCE_FILES "host.cxx;vector_abi.cxx"
   SOURCE_FILES "host_array.cxx"#;array_abi.cxx"
   JAVASCRIPT_FILES "run_SideModuleTest.js")
+
+add_dependencies(${TARGET_NAME} ${SIDE_TARGET_NAME} Runtime)
+add_dependencies(${TARGET_NAME} Runtime)
 
 add_test(NAME ES6_SideModule_NoErrors
   COMMAND
   npx node run_SideModuleTest.js
   WORKING_DIRECTORY
   ${CMAKE_CURRENT_BINARY_DIR})
-add_dependencies(${TARGET_NAME} ${SIDE_TARGET_NAME})
