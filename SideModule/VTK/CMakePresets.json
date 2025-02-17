@@ -13,6 +13,7 @@
             "generator": "Ninja Multi-Config",
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
+		"VTK_DIR": "$env{HOME}/github/VTKCMake/install/lib/cmake/vtk",
                 "WASMExamples_DEBUG": "READABLE_JS",
                 "WASMExamples_OPTIMIZATION": "BEST"
             }
