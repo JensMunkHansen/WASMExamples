@@ -17,6 +17,15 @@
                 "WASMExamples_DEBUG": "READABLE_JS",
                 "WASMExamples_OPTIMIZATION": "BEST"
             }
+        },
+        {
+          "name": "linux",
+          "displayName": "Linux",
+          "binaryDir": "build",
+            "generator": "Ninja Multi-Config",
+            "cacheVariables": {
+		"VTK_DIR": "$env{HOME}/github/vtk/build"
+            }
         }
     ],
     "buildPresets": [
@@ -28,6 +37,16 @@
         {
             "name": "Release",
             "configurePreset": "default",
+            "configuration": "Release"
+        },
+        {
+            "name": "LinuxDebug",
+            "configurePreset": "linux",
+            "configuration": "Debug"
+        },
+        {
+            "name": "LinuxRelease",
+            "configurePreset": "linux",
             "configuration": "Release"
         }
     ]

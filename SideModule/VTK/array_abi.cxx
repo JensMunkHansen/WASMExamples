@@ -106,7 +106,7 @@ void ArrayIncrementReference(ArrayView* view)
   }
 }
 
-void ArrayDecrementReference(ArrayView* view)
+void ArrayDecrementReference(ArrayView*& view)
 {
   if (view)
   {
@@ -115,14 +115,22 @@ void ArrayDecrementReference(ArrayView* view)
     {
       if (view->data)
       {
+#ifndef __EMSCRIPTEN__
+        printf("freeing content\n");
+#endif
         free(view->data);
+        view->data = nullptr;
       }
       free(view);
+#ifndef __EMSCRIPTEN__
+      printf("freeing\n");
+#endif
+      view = nullptr;
     }
   }
 }
 
-void ArrayDelete(ArrayView* view)
+void ArrayDelete(ArrayView*& view)
 {
   if (view)
   {
@@ -208,7 +216,6 @@ void ArrayResize(ArrayView* view, int newCapacity)
   {
     if (view->elementSize == 0)
     {
-      // printf("Element size not set.\n");
       return;
     }
 
@@ -219,7 +226,8 @@ void ArrayResize(ArrayView* view, int newCapacity)
     else
     {
       // Must be compatible with how VTK is compiled!!!
-      void* newData = realloc(view->data, newCapacity * view->elementSize * view->nComponents);
+      // Must use the original pointer!!!!
+      void* newData = malloc(newCapacity * view->elementSize * view->nComponents);
       if (!newData)
       {
         // printf("Memory allocation failed.\n"); // requires -sEXIT_RUNTIME=1 -sFULL_ES3=1

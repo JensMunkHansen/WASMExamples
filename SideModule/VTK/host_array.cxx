@@ -2,7 +2,9 @@
 
 #include "array_abi.h"
 #include "side_array_abi.h"
+#ifdef __EMSCRIPTEN__
 #include <emscripten/bind.h>
+#endif
 #include <iostream>
 #include <vtkDoubleArray.h>
 #include <vtkFloatArray.h>
@@ -34,12 +36,14 @@ void SynchronizeHelper(ArrayView* view)
     void* newDataPointer;
     ArrayDataPointerGet(view, &newDataPointer);
     size_t newLength = nTuples * nComponents;
-    // Does not change reference count
-    myArray->SetVoidArray(newDataPointer, newLength, 1, vtkTypeTraits<ScalarType>::VTKTypeID());
 
+    // VTK does not own this data!!!
+    myArray->Initialize();
+    myArray->SetArray(static_cast<float*>(newDataPointer), newLength, 1);
     // Resize the vtkFloatArray to match the updated VectorView dimensions
-    myArray->SetNumberOfComponents(nComponents);
-    myArray->SetNumberOfTuples(nTuples);
+    //    myArray->SetNumberOfComponents(nComponents);
+    //    myArray->SetNumberOfTuples(nTuples);
+    myArray->Modified();
   }
 }
 
@@ -67,12 +71,17 @@ void Synchronize(ArrayView* view, void* userData)
 }
 
 static int MyArrayType = VTK_FLOAT;
+#ifdef __EMSCRIPTEN__
 void TestMe()
+#else
+int main(int argc, char* argv[])
+#endif
 {
   std::cout << "SetNumberOfTuples" << std::endl;
   myArray->SetNumberOfTuples(10);
   std::cout << "SetNumberOfComponents" << std::endl;
   myArray->SetNumberOfComponents(1);
+  myArray->Allocate(10);
   // Just a test to set something by main module
   myArray->SetValue(0, 1.0f);
 
@@ -112,7 +121,9 @@ void TestMe()
   ArrayDelete(arrayView);
 }
 
+#ifdef __EMSCRIPTEN__
 EMSCRIPTEN_BINDINGS(SideModuleTest)
 {
   emscripten::function("TestMe", &TestMe);
 }
+#endif

@@ -2,44 +2,42 @@
 #define ARRAY_ABI_H
 
 #include "abi.h"
+#include "runtime_exports.h"
 
-#ifdef __cplusplus
-extern "C"
-{
-#endif
+Runtime_EXTERN_C_BEGIN;
 
-  // No types are allowed - only opaque types
-  typedef struct ArrayView ArrayView;
+// No types are allowed - only opaque types
+typedef struct ArrayView ArrayView;
 
-  // Callback to call when the memory is updated
-  typedef ABI_FUNC((*ArrayUpdateCallback))(ArrayView* view, void* userData);
+// Callback to call when the memory is updated
+Runtime_EXTERN_C typedef void (*ArrayUpdateCallback)(ArrayView* view, void* userData);
 
-  ABI_FUNC(ArrayElementSizeGet)(int elementType, int* size);
+Runtime_EXPORT void ArrayElementSizeGet(int elementType, int* size);
+Runtime_EXPORT void ArrayElementTypeGet(const ArrayView* view, int* elementType);
 
-  // Low-level operations (type-agnostic).
-  // We cannot return values (memory space is different)
-  ABI_FUNC(ArrayCreate)(ArrayView*& obj, int elementType);
-  ABI_FUNC(ArrayDelete)(ArrayView* view); // TODO: Use reference
-  ABI_FUNC(ArrayReferenceCounterGet)(const ArrayView* view, int* referenceCount);
-  ABI_FUNC(ArrayReferenceCounterSet)(ArrayView* view, int);
-  // Data pointer
-  ABI_FUNC(ArrayDataPointerGet)(const ArrayView* view, void** data);
-  ABI_FUNC(ArrayDataPointerSet)(ArrayView* view, void* data);
-  ABI_FUNC(ArrayShallowCopy)(const ArrayView* src, ArrayView* dest);
-  // Number of tuples
-  ABI_FUNC(ArrayNumberOfTuplesGet)(const ArrayView* view, int* nTuples);
-  ABI_FUNC(ArrayNumberOfTuplesSet)(ArrayView* view, int nTuples);
-  // Number of components
-  ABI_FUNC(ArrayNumberOfComponentsGet)(const ArrayView* view, int* nComponents);
-  ABI_FUNC(ArrayNumberOfComponentsSet)(ArrayView* view, int nComponents);
+// Low-level operations (type-agnostic).
+// We cannot return values (memory space is different)
+Runtime_EXPORT void ArrayCreate(ArrayView*& obj, int elementType);
+Runtime_EXPORT void ArrayDelete(ArrayView*& view); // TODO: Use reference
+Runtime_EXPORT void ArrayIncrementReference(ArrayView* view);
 
-  ABI_FUNC(ArrayResize)(ArrayView* view, int newCapacity);
-  ABI_FUNC(ArrayElementTypeGet)(const ArrayView* view, int* elementType);
+Runtime_EXPORT void ArrayReferenceCounterGet(const ArrayView* view, int* referenceCount);
+Runtime_EXPORT void ArrayReferenceCounterSet(ArrayView* view, int);
+// Data pointer
+Runtime_EXPORT void ArrayDataPointerGet(const ArrayView* view, void** data);
+Runtime_EXPORT void ArrayDataPointerSet(ArrayView* view, void* data);
+Runtime_EXPORT void ArrayShallowCopy(const ArrayView* src, ArrayView* dest);
+// Number of tuples
+Runtime_EXPORT void ArrayNumberOfTuplesGet(const ArrayView* view, int* nTuples);
+Runtime_EXPORT void ArrayNumberOfTuplesSet(ArrayView* view, int nTuples);
+// Number of components
+Runtime_EXPORT void ArrayNumberOfComponentsGet(const ArrayView* view, int* nComponents);
+Runtime_EXPORT void ArrayNumberOfComponentsSet(ArrayView* view, int nComponents);
 
-  ABI_FUNC(ArrayUpdateCallbackSet)(ArrayView* view, ArrayUpdateCallback callback, void* userData);
+Runtime_EXPORT void ArrayResize(ArrayView* view, int newCapacity);
 
-#ifdef __cplusplus
-}
-#endif
+void ArrayUpdateCallbackSet(ArrayView* view, ArrayUpdateCallback callback, void* userData);
+
+Runtime_EXTERN_C_END;
 
 #endif // ARRAY_ABI_H

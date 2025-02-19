@@ -15,6 +15,7 @@ find_package(VTK
   COMPONENTS
   CommonCore
 )
+set(BUILD_SHARED_LIBS ON)
 
 set(TARGET_NAME VTKABITest)
 
@@ -26,6 +27,7 @@ if (NOT DEFINED WASMExamples_DEBUG)
   sps_set_emscripten_defaults(WASMExamples)
 endif()
 include(spsEmscriptenSettings)
+include(spsExportHeader)
 
 # We get linker errors if this is C++
 
@@ -38,6 +40,10 @@ include(spsEmscriptenSettings)
 # and implementations, which WebAssembly does not natively support.
 
 set(SIDE_TARGET_NAME SideModule)
+set(LIB_TYPE STATIC)
+#set(LIB_TYPE SHARED)
+
+if (EMSCRIPTEN)
 sps_emscripten_module(
   SIDE_MODULE
   VERBOSE
@@ -47,8 +53,15 @@ sps_emscripten_module(
   EXPORTED_FUNCTIONS "Process"
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
-  SOURCE_FILES "array_abi.cxx;side_array_abi.cxx")
+  SOURCE_FILES "side_array_abi.cxx")
+else()
+  add_executable(main main.cxx)
+  target_link_libraries(main ${VTK_LIBRARIES})
+  add_library(${SIDE_TARGET_NAME} ${LIB_TYPE} side_array_abi.cxx)
+endif()
+target_include_directories(${SIDE_TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>>")
 
+if (EMSCRIPTEN)
 sps_emscripten_module(
   SIDE_MODULE
   VERBOSE
@@ -59,7 +72,12 @@ sps_emscripten_module(
   DEBUG ${WASMExamples_DEBUG}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "array_abi.cxx")
+else()
+  add_library(Runtime ${LIB_TYPE} array_abi.cxx)
+endif()
+sps_generate_custom_export_header(Runtime)
 
+if (EMSCRIPTEN)
 sps_emscripten_module(
   MAIN_MODULE
   VERBOSE
@@ -74,6 +92,11 @@ sps_emscripten_module(
   SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/SideModule.wasm;${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/Runtime.wasm"
   SOURCE_FILES "host_array.cxx"
   JAVASCRIPT_FILES "run_SideModuleTest.js")
+else()
+  add_executable(${TARGET_NAME} host_array.cxx)
+  target_link_libraries(${TARGET_NAME} PRIVATE ${SIDE_TARGET_NAME} Runtime ${VTK_LIBRARIES})
+endif()
+target_include_directories(${TARGET_NAME} PUBLIC "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/$<CONFIG>>")
 
 add_dependencies(${TARGET_NAME} ${SIDE_TARGET_NAME})
 add_dependencies(${SIDE_TARGET_NAME} Runtime)
