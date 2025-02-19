@@ -108,7 +108,6 @@ void ArrayIncrementReference(ArrayView* view)
 
 void ArrayDecrementReference(ArrayView* view)
 {
-  printf("%s\n", __FUNCTION__);
   if (view)
   {
     view->referenceCount--;
@@ -116,7 +115,6 @@ void ArrayDecrementReference(ArrayView* view)
     {
       if (view->data)
       {
-        printf("Freed\n");
         free(view->data);
       }
       free(view);
