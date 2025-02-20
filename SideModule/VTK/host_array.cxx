@@ -37,12 +37,16 @@ void SynchronizeHelper(ArrayView* view)
     ArrayDataPointerGet(view, &newDataPointer);
     size_t newLength = nTuples * nComponents;
 
-    // VTK does not own this data!!!
+    // Warning: This is incorrect:
+    //
+    // Correct ways:
+    // - Pass instead ownership back-and-forth and also listen to
+    // Modified() event.
+    //
+    // - Extend vtkCommonDataModel with our mesh type. Note parallel for
+    //   and Dispatchers are exposed in vtkCommonCore
     myArray->Initialize();
     myArray->SetArray(static_cast<float*>(newDataPointer), newLength, 1);
-    // Resize the vtkFloatArray to match the updated VectorView dimensions
-    //    myArray->SetNumberOfComponents(nComponents);
-    //    myArray->SetNumberOfTuples(nTuples);
     myArray->Modified();
   }
 }
