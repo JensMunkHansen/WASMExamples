@@ -5,7 +5,7 @@ project(ThreadCallback)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(${PROJECT_NAME})
 endif()
@@ -27,7 +27,7 @@ sps_emscripten_module(
   TARGET_NAME SimpleCallback
   SOURCE_FILES SimpleCallback.cxx
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 # VTK callback
@@ -40,7 +40,7 @@ sps_emscripten_module(
   LIBRARIES VTK::CommonCore
   SOURCE_FILES VTKCallback.cxx
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 # JavaScript callback (same thread)
@@ -57,7 +57,7 @@ sps_emscripten_module(
   SOURCE_FILES JSCallback.cxx
   EMBIND ON
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 add_test(NAME ThreadCallback_JSInvoke_NoErrors
@@ -82,7 +82,7 @@ sps_emscripten_module(
   SOURCE_FILES JSCallbackThreadDetached.cxx
   EMBIND ON
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 add_test(NAME ThreadCallback_AsynDetached_NoErrors
@@ -105,7 +105,7 @@ sps_emscripten_module(
   SOURCE_FILES ES6Callback.cxx
   EMBIND ON
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 add_test(NAME ES6CallbackTest_NoErrors

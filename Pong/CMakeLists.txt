@@ -6,7 +6,7 @@ project(Pong)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../CMake)
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   sps_set_emscripten_defaults(WASMExamples)
 endif()
 include(spsEmscriptenSettings)

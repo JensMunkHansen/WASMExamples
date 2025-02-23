@@ -22,7 +22,7 @@ sps_emscripten_module(
   SOURCE_FILES JSCallbackThreadJoinable.cxx # JSCallbackThread.cxx (works)
   EMBIND ON
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 
 add_test(NAME ThreadCallback_AsynJoinable_NoErrors

@@ -14,7 +14,7 @@
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
                 "WASMExamples_OPTIMIZATION": "BEST",
-                "WASMExamples_DEBUG": "NONE",
+                "WASMExamples_DEBUGINFO": "NONE",
                 "WASMExamples_COMPILE_OPTIMIZATION": "BEST"
             }
         }

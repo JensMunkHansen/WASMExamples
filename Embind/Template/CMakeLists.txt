@@ -22,7 +22,7 @@ include(spsEmscriptenDefaults)
 include(spsAsan)
 include(spsUBSan)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -33,7 +33,7 @@ sps_emscripten_module(
   ES6_MODULE ON
   SOURCE_FILES main.cpp
   JAVASCRIPT_FILES run.js
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   EMBIND ON)
 

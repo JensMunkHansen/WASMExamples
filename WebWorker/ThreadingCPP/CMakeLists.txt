@@ -6,7 +6,7 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -22,6 +22,6 @@ sps_emscripten_module(
   JAVASCRIPT_FILES index.html main.mjs worker.mjs
   TARGET_NAME ThreadingCPP
   SOURCE_FILES library.cpp
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
 )

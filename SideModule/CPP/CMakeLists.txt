@@ -10,7 +10,7 @@ set(TARGET_NAME CPPSideModuleTest)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -34,7 +34,7 @@ sps_emscripten_module(
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME "TypeLibrary"
   EXPORTED_FUNCTIONS "CreateMyStruct;GetValue;SetValue"
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "side.cxx")
 sps_emscripten_module(
@@ -44,7 +44,7 @@ sps_emscripten_module(
   THREADING_ENABLED ON
   EMBIND ON
   EXPORT_NAME "loadCPPSideModuleTest"
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   TARGET_NAME ${TARGET_NAME}
   SIDE_MODULES "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/TypeLibrary.wasm"

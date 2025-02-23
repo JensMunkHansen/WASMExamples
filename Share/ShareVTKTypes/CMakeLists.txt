@@ -13,7 +13,7 @@ include(spsEmscriptenDefaults)
 include(spsAsan)
 include(spsUBSan)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -28,7 +28,7 @@ sps_emscripten_module(
   SOURCE_FILES Factory.cxx First.cxx
   JAVASCRIPT_FILES runc.js
   EXPORT_NAME loadFirstModule
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
 set(TARGET_TEST_NAME Second)
@@ -40,7 +40,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runc.js
   EXPORT_NAME loadSecondModule
   EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
 add_test(NAME SharingVTKTypes

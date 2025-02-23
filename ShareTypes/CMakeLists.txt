@@ -14,7 +14,7 @@ include(spsEmscriptenDefaults)
 include(spsAsan)
 include(spsUBSan)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -26,7 +26,7 @@ sps_emscripten_module(
   ES6_MODULE ON
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES runc.js
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadFirstModule
   EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
@@ -38,7 +38,7 @@ sps_emscripten_module(
   ES6_MODULE ON
   SOURCE_FILES Types.cxx Second.cxx
   JAVASCRIPT_FILES runc.js
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadSecondModule
   EXPORTED_FUNCTIONS CreateStruct;DestroyStruct;Produce;Consume;ConsumeTest
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
@@ -61,7 +61,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runcpp.js
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadFirstCPPModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
@@ -74,7 +74,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runcpp.js
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadSecondCPPModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
@@ -90,7 +90,7 @@ sps_emscripten_module(
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadFirstCPPModule
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 # Specify linker file (not honored in WASM yet)
 #target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/First.ld")
@@ -106,7 +106,7 @@ sps_emscripten_module(
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadSecondCPPModule
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 # Specify linker file (not honored in WASM yet)
 #target_link_options(${TARGET_TEST_NAME} PRIVATE "--ldflags=${CMAKE_CURRENT_SOURCE_DIR}/Second.ld")
@@ -122,7 +122,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runshared.js
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadFirstSharedModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 
@@ -135,7 +135,7 @@ sps_emscripten_module(
   JAVASCRIPT_FILES runshared.js
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   EXPORT_NAME loadSecondSharedModule
   OPTIMIZATION ${WASMExamples_OPTIMIZATION})
 

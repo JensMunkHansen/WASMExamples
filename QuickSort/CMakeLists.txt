@@ -8,7 +8,7 @@ project(QuickSort
 
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -27,7 +27,7 @@ if (EMSCRIPTEN)
     SOURCE_FILES QuickSort.cxx
     TARGET_NAME ${TARGET_NAME}
     THREADING_ENABLED ON
-    DEBUG ${WASMExamples_DEBUG}
+    DEBUG ${WASMExamples_DEBUGINFO}
     COMPILE_OPTIMIZATION ${WASMExamples_COMPILE_OPTIMIZATION}
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )

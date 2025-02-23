@@ -8,7 +8,7 @@ project(EightQueens
 
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -27,7 +27,7 @@ if (EMSCRIPTEN)
     ENABLE_EXCEPTIONS ${ENABLE_EXCEPTIONS}
     SOURCE_FILES EightQueen.cxx
     TARGET_NAME ${TARGET_NAME}
-    DEBUG ${WASMExamples_DEBUG}
+    DEBUG ${WASMExamples_DEBUGINFO}
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
 else()

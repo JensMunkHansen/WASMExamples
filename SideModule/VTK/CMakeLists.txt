@@ -22,7 +22,7 @@ set(TARGET_NAME VTKABITest)
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/../../CMake)
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -51,7 +51,7 @@ sps_emscripten_module(
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME ${SIDE_TARGET_NAME}
   EXPORTED_FUNCTIONS "Process"
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "side_array_abi.cxx")
 else()
@@ -69,7 +69,7 @@ sps_emscripten_module(
   THREADING_ENABLED ON # Required for shared memory
   TARGET_NAME Runtime
   EXPORTED_FUNCTIONS "@${CMAKE_CURRENT_SOURCE_DIR}/array_abi.json"
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   SOURCE_FILES "array_abi.cxx")
 else()
@@ -85,7 +85,7 @@ sps_emscripten_module(
   THREADING_ENABLED ON
   EMBIND ON
   EXPORT_NAME "loadSideModuleTest"
-  DEBUG ${WASMExamples_DEBUG}
+  DEBUG ${WASMExamples_DEBUGINFO}
   OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   LIBRARIES ${VTK_LIBRARIES}
   TARGET_NAME ${TARGET_NAME}

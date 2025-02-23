@@ -18,7 +18,7 @@ endif()
 
 include(spsEmscriptenDefaults)
 
-if (NOT DEFINED WASMExamples_DEBUG)
+if (NOT DEFINED WASMExamples_DEBUGINFO)
   # We anticipate all options are set
   sps_set_emscripten_defaults(WASMExamples)
 endif()
@@ -37,7 +37,7 @@ if(EMSCRIPTEN)
     ES6_MODULE OFF
     TARGET_NAME random_rw
     SOURCE_FILES random_rw.cpp
-    DEBUG ${WASMExamples_DEBUG}
+    DEBUG ${WASMExamples_DEBUGINFO}
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
   sps_emscripten_module(
@@ -45,7 +45,7 @@ if(EMSCRIPTEN)
     ES6_MODULE OFF
     TARGET_NAME random_lookup_dot
     SOURCE_FILES random_lookup_dot.cpp
-    DEBUG ${WASMExamples_DEBUG}
+    DEBUG ${WASMExamples_DEBUGINFO}
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
   sps_emscripten_module(
@@ -54,7 +54,7 @@ if(EMSCRIPTEN)
     ES6_MODULE OFF
     TARGET_NAME random_lookup_dot_array
     SOURCE_FILES random_lookup_dot_array.cpp
-    DEBUG ${WASMExamples_DEBUG}
+    DEBUG ${WASMExamples_DEBUGINFO}
     OPTIMIZATION ${WASMExamples_OPTIMIZATION}
   )
 

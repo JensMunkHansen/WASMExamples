@@ -20,7 +20,7 @@ sps_emscripten_module(
   EXPORT_NAME loadES6Module
   EXPORTED_FUNCTIONS HelloWorld
   OPTIMIZATION ${${PROJECT_NAME}_OPTIMIZATION}
-  DEBUG ${${PROJECT_NAME}_DEBUG}
+  DEBUG ${${PROJECT_NAME}_DEBUGINFO}
 )
 # 131.0.6778.264 (Official Build) (64-bit)  (WORKS)
 
