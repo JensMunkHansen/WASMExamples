@@ -1,0 +1,14 @@
+world Shared {
+    record Person {
+        name: string,
+        age: u32,
+    }
+
+    interface ModuleA {
+        create_person(name: string, age: u32) -> Person
+    }
+
+    interface ModuleB {
+        process_person(person: Person)
+    }
+}

@@ -1,0 +1,34 @@
+use wasmtime::*;
+use wasmtime_wasi::*;
+
+fn main() -> anyhow::Result<()> {
+    // Create a Wasmtime engine
+    let engine = Engine::default();
+    let mut linker = Linker::new(&engine);
+
+    // Initialize WASI
+    let wasi = WasiCtxBuilder::new().build();
+    wasi::add_to_linker(&mut linker, |s| s)?;
+
+    // Load Module A and Module B
+    let module_a = Module::from_file(&engine, "module_a.wasm")?;
+    let module_b = Module::from_file(&engine, "module_b.wasm")?;
+
+    // Create instances
+    let instance_a = linker.instantiate(&module_a)?;
+    let instance_b = linker.instantiate(&module_b)?;
+
+    // Get the `create_person` function from Module A
+    let create_person = instance_a
+        .get_typed_func::<(String, u32), (String, u32)>(&mut store, "create_person")?;
+
+    // Get the `process_person` function from Module B
+    let process_person = instance_b
+        .get_typed_func::<(String, u32), ()>(&mut store, "process_person")?;
+
+    // Use the shared interface
+    let person = create_person.call(&mut store, ("Alice".into(), 30))?;
+    process_person.call(&mut store, person)?;
+
+    Ok(())
+}

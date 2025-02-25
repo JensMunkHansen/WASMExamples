@@ -15,3 +15,5 @@ emsdk/
 *.a
 ./base64/base64c.wat
 ./base64/base64c.js
+base64/base64c.js
+base64/base64c.wat
