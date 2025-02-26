@@ -13,7 +13,7 @@
             "generator": "Ninja Multi-Config",
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
-                "ThreadCallback_DEBUG": "SOURCE_MAPS"
+                "ThreadCallback_DEBUGINFO": "SOURCE_MAPS"
             }
         }
     ],
