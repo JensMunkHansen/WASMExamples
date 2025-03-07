@@ -13,7 +13,7 @@
             "generator": "Ninja Multi-Config",
             "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
             "cacheVariables": {
-                "WASMExamples_OPTIMIZATION": "NONE",
+                "WASMExamples_OPTIMIZATION": "BEST",
                 "WASMExamples_DEBUGINFO": "SOURCE_MAPS"
             }
         }
