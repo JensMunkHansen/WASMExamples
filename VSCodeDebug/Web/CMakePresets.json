@@ -11,7 +11,7 @@
             "displayName": "Emscripten",
             "binaryDir": "build",
             "generator": "Ninja Multi-Config",
-            "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake"
+            "toolchainFile": "$env{HOME}/github/emsdk/upstream/emscripten/cmake/Modules/Platform/Emscripten.cmake",
         }
     ],
     "buildPresets": [
