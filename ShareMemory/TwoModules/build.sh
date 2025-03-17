@@ -8,6 +8,7 @@ emcc module1.cpp -o module1.js \
     -s ENVIRONMENT='web,node' \
     -pthread \
     -s MODULARIZE=1 \
+    -s EXPORT_NAME=Module1Factory \
     -s EXPORT_ES6=1 \
     -s ALLOW_MEMORY_GROWTH=0 \
     -s SINGLE_FILE=0
