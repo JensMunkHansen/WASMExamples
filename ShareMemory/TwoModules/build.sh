@@ -5,12 +5,12 @@ emcc module1.cpp -o module1.js \
     -s SHARED_MEMORY=1 \
     -s PTHREAD_POOL_SIZE=2 \
     -s PROXY_TO_PTHREAD=0 \
-    -s ENVIRONMENT='web,node' \
+    -s ENVIRONMENT='web,node,worker' \
     -pthread \
     -s MODULARIZE=1 \
     -s EXPORT_NAME=Module1Factory \
     -s EXPORT_ES6=1 \
-    -s ALLOW_MEMORY_GROWTH=0 \
+    -s ALLOW_MEMORY_GROWTH=1 \
     -s SINGLE_FILE=0
 
 emcc module2.cpp -o module2.js \
@@ -20,9 +20,9 @@ emcc module2.cpp -o module2.js \
     -s SHARED_MEMORY=1 \
     -s PTHREAD_POOL_SIZE=2 \
     -s PROXY_TO_PTHREAD=0 \
-    -s ENVIRONMENT='web,node' \
+    -s ENVIRONMENT='web,node,worker' \
     -pthread \
     -s MODULARIZE=1 \
     -s EXPORT_ES6=1 \
-    -s ALLOW_MEMORY_GROWTH=0 \
+    -s ALLOW_MEMORY_GROWTH=1 \
     -s SINGLE_FILE=0
