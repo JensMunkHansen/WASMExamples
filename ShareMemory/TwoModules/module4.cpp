@@ -9,12 +9,12 @@ namespace
 static float* staticData = nullptr;
 }
 
-#define HEAP_OFFSET 0x100000 // 1MB offset
+#define HEAP_OFFSET 0x200000 // 1MB offset
 
 uintptr_t heap_end = 0;
 uintptr_t previous_heap = 0;
 
-extern "C" EMSCRIPTEN_KEEPALIVE void* custom_sbrk(intptr_t increment)
+void* custom_sbrk(intptr_t increment)
 {
   if (heap_end == 0)
   {
@@ -92,23 +92,19 @@ extern "C" EMSCRIPTEN_KEEPALIVE void free(void* ptr)
 extern "C"
 {
   EMSCRIPTEN_KEEPALIVE
-  volatile void use_heap3()
+  volatile void use_heap4()
   {
-    printf("module3\n");
-    staticData = (float*)__wrap_malloc(3 * sizeof(float));
-    staticData[0] = 0.0f;
-    staticData[1] = 1.0f;
-    staticData[2] = 2.0f;
+    printf("module4\n");
+    staticData = (float*)custom_sbrk(3 * sizeof(float));
+    staticData[0] = 10.0f;
+    staticData[1] = 11.0f;
+    staticData[2] = 12.0f;
   }
 
-  EMSCRIPTEN_KEEPALIVE void* register_function3()
+  EMSCRIPTEN_KEEPALIVE void* register_function4()
   {
-    return (void*)use_heap3;
-  }
-
-  EMSCRIPTEN_KEEPALIVE
-  float read_heap()
-  {
-    return staticData[1];
+    return (void*)use_heap4;
   }
 }
+
+// TODO: Save heap state....

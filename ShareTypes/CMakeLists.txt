@@ -87,6 +87,7 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx First.cxx
   JAVASCRIPT_FILES runshared.js
   THREADING_ENABLED ON
+  SHARED_MEMORY ON
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadFirstCPPModule
@@ -103,6 +104,7 @@ sps_emscripten_module(
   SOURCE_FILES Types.cxx Second.cxx
   JAVASCRIPT_FILES runshared.js
   THREADING_ENABLED ON
+  SHARED_MEMORY ON
   EMBIND ON
   COMPILE_DEFINITIONS CPPTYPES
   EXPORT_NAME loadSecondCPPModule

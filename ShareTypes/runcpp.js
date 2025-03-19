@@ -51,8 +51,11 @@ async function main() {
         // Copy data to wasmModule2's memory
         let memory2 = new Uint8Array(wasmModule2.HEAPU8.buffer, ptr2, structSize);
         memory2.set(copiedData); // Overwrite wasm2's memory
-        obj2.i = 7; // Saved by mangling
+        //obj2.i = 7; // Saved by mangling
 
+        wasmModule2.ConsumeTestCPP(obj2);
+
+        
         // Verify the copied values
         console.log(`wasmModule2: obj2.i = ${obj2.i}, obj2.f = ${obj2.f}`);
 
